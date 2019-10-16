@@ -1,0 +1,119 @@
+%!TEX root = main.tex
+
+
+
+
+\section{Our Construction} 
+\label{sec:random-bin-assignment}
+
+We first present the oblivious random bin assignment algorithm (Section~\ref{sec:obin})  and then use it to implement oblivious sort and ORP (Section~\ref{sec:osort}).
+
+\newcommand{\val}{{\sf value}}
+\newcommand{\pref}{{\sf pref}}
+
+\subsection{Oblivious Random Bin Assignment.}
+\label{sec:obin}
+
+The input to the oblivious random bin assignment algorithm is an array $\X$ of $n$ elements. 
+The algorithm first chooses a bucket size $Z$, 
+and constructs $B=\lceil 2n/Z \rceil$ buckets each of size $Z$.
+Without loss of generality, assume $B$ is a power of $2$ --- if not, pad it to the next power of 2;
+also assume elements in $\X$ are distinct --- if not, we can use the indices of the elements within $\X$ to break ties.
+
+Figure~\ref{fig:radix-sort} gives a graphic illustration of the algorithm for 8 input buckets and Algorithm~\ref{code:obin} gives the pseudocode.
+Each element in $\X$ is assigned a random key in $[0, B-1]$ which represents a destination bucket.
+Next, the algorithm repeatedly calls the \textsc{MergeSplit} subroutine to exchange elements between bucket pairs in $\log B$ levels to distribute elements into their destination buckets. 
+The operation $(A'_0,A'_1)\leftarrow \textsc{MergeSplit}(A_0,A_1,i)$ involves four buckets at the time, distributing the elements in the two input buckets $A_0$ and $A_1$ into two output buckets $A'_0$ and $A'_1$.
+$A'_0$ receives all the keys with $(i+1)$-th most significant bit (MSB) as 0 and $A'_1$ receives all the keys with $(i+1)$-th MSB as 1.
+
+
+\input{code}
+
+For now, assume the client can locally store two buckets.
+For each \textsc{MergeSplit}, it reads (and decrypts) the two input buckets, swap elements in the two buckets according to the above rule, and writes to the two output buckets (after re-encryption).
+It is then easy to see that Algorithm~\ref{code:obin} is oblivious since the order in which the client reads and writes the buckets is fixed and independent of the input array.
+We discuss how to extend the algorithm to work with $O(1)$ client storage in Section~\ref{sec:O1client}. 
+
+When no bucket overflows, all real elements are correctly put into their assigned bins.
+We now show that the probability of overflow is exponentially small in $Z$. 
+Intuitively, this is because each bucket contains half dummy elements that serve as a form of ``slack'' to present overflow.
+
+\begin{lemma}
+\label{lemma:shuffle}
+Overflow happens with at most $\epsilon(n, Z) = 2n/Z \cdot \log(2n/Z) \cdot e^{-Z/6}$ probability.
+\end{lemma}
+\begin{proof}
+\label{clm:proof-shuffle}
+Consider a bucket $A^{(i)}_b$ at level $i$.
+%Let $T$ be the set of real elements. For $t \in T$, $i \in \{1,\ldots,\log B\}$ and $b \in [B]$, let $X_{i,b}^{t}$ be the indicator random variable that $t$ is assigned to bucket $A^{(i)}_b$.
+%$X_{i,b}=\sum_{t \in T}X_{i,b}^{t}$ denotes the load of $A^{(i)}_b$. 
+Observe that this bucket can receive real elements from $2^i$ initial buckets, each containing $Z/2$ real elements.
+For each such element, we have chosen an independent and uniformly random key;
+the element reaches $A^{(i)}_b$ only when the most significant $i$ bits of its key match $b$,
+which happens with exactly $2^{-i}$ probability.
+A Chernoff bound shows that $A^{(i)}_b$ overflows with less than $e^{-Z/6}$ probability.
+Hence, a union bound over all levels and all buckets 
+shows that overflow happens with less than $B \cdot \log B \cdot e^{-Z/6} = \epsilon(n,Z)$ probability.
+\end{proof}
+
+
+\subsection{Oblivious Random Permutation (ORP) and Oblivious Sort.}
+\label{sec:osort}
+
+After performing the oblivious random bin assignement, ORP can be simply achieved as follows:
+delete dummy elements from each bin, locally permute each bin, and finally concatenate the bins.
+
+The ORP reveals the loads of the output buckets of bin assignment,
+These loads entirely depend on the random keys and do not reveal any information about the input array. 
+The ORP algorithm is clearly oblivious. 
+We next show that it gives a random permutation.
+
+\begin{lemma}
+Bucket ORP outputs a random permutation of the input array except for $\epsilon(n,Z)$ probability.
+\end{lemma}
+\begin{proof}
+Let $\Pi$ be permutation corresponding to the output of the ORP algorithm.
+First, let us assume the oblivious random bin assignment procedure does not encounter any overflow.
+Let $\vec{K} = (K_0, K_1, \ldots, K_{B-1})$ be the load of the random bin assignment,
+i.e., the $i$-th output bucket contains $K_i$ real elements. 
+For a particular load $\vec{k}=(k_0, k_1, \ldots, k_{B-1})$, there are ${n \choose k_0,\ldots,k_{B-1}}$ ways to distribute the elements into the bins while achieving load $\vec{k}$.
+The total number of possible outputs with that load is then
+\[{n \choose k_0,\ldots,k_{B-1}} \cdot k_0! \cdot \ldots \cdot k_{B-1}! = n!\]
+That is, even if the loads $\vec{k}=(k_0, k_1, \ldots, k_{B-1})$ are revealed, all permutations are still possible.
+Therefore, for every $\pi$, $\Pr\left[\Pi = \pi \mid \vec{K}=\vec{k} \right] = \frac 1 {n!}$, and
+\[ \Pr\left[\Pi = \pi\right] = \sum_{\vec{k}} \Pr\left[\Pi = \pi \mid \vec{K}=\vec{k} \right] \cdot \Pr\left[\vec{K}=\vec{k}\right] = \frac {1}{n!} \]
+%&= \frac {1}{n!} \cdot \sum_{\vec{k}} \Pr\left[\vec{K}=\vec{k}\right] = \frac {1}{n!}
+
+The ORP fails only when the a certain bin overflows during the oblivious random bin assignment, which happens with $\epsilon(n,Z)$ probability.
+\end{proof}
+
+Once we have ORP, it is easy to achieve oblivious sort: just invoke any non-oblivious comparison-based sort after ORP.
+The access patterns of a comparison-based sort depend only on the relative ranking of the input elements, which is independent of the input array once the array has been randomly permuted.
+
+\subsection{Efficiency.}
+\label{sec:efficiency}
+
+We analyze the efficiency of our algorithms and compared them to classic non-oblivious oblivious sorting algorithms in Table~\ref{tab:compare}.
+We measure runtime using the number of memory accesses the clients needs to perform on the server.
+
+Merge sort, a well known non-oblivious sort, runs in $2n\log n$ time. 
+It has in $\log n$ stages; each stage merges smaller sorted subarrays into larger sorted subarrays,
+which reads and writes the entire array in the process.
+Bitonic sort uses $\frac 14 n\log^2 n$ comparisons.
+According to~\cite{zigzag}, the AKS sorting network has $13613047 n\log n$ comparisons and the Zigzag sort uses $19600n\log n$ comparisons (with best known explicit constructions). 
+Randomized Shellsort~\cite{RandShellsort} needs $6n\log n$ comparisons (there are $\log n$ iterations, six passes per iteration, and $n$ comparisons per pass). 
+The number of memory accesses is four times of the number of comparisons for Bitonic, AKS, Zigzag, and randomized Shellsort.
+
+For our algorithms, assuming the client can store $2Z$ elements locally, each $2n$-sized array is read and written once and there are $\log(2n/Z)<\log n$ of them.
+So oblivious bin assignment and bucket ORP run in (less than) $4n\log n$ time.
+Note that the last step of ORP, i.e., permuting each output bucket, can be incorporated with the last level of oblivious bin assignment.
+Bucket oblivious sort additional invokes a non-oblivious sort, and thus runs in $6n\log n$ time. 
+This is within $3\times$ of merge sort and beats Bitonic sort when $n$ is moderately large;
+for example, $5\times$ faster than Bitonic for $n=2^{30}$.
+For an overflow probability of $2^{-80}$ and most reasonable values of $n$, $Z = 512$ suffices. 
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End:

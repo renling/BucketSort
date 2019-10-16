@@ -1,0 +1,65 @@
+
+\newcommand{\memsize}{{N}}
+\newcommand{\blocksize}{{b}}
+\section{Definitions}
+\label{sec:defs}
+
+\paragraph{Notations and conventions.}
+We let $[n]$ denote the set $\{1,\ldots,n\}$. Throughout this paper, for underlying building blocks, we will use
+$n$ to denote the size of the instance and use $\lambda$ 
+to denote the security parameter. 
+%For our final ORAM constructions, we use $N$ to denote the size of the total 
+%logical memory size as well as the security parameter --- note that 
+%this follows the convention of most existing works on ORAMs~\cite{oram00,oram10,oram09,oram03,asiacrypt11,pathoram,circuitoram}.
+A function $\negl$ is called \emph{negligible} if for any constant $c > 0$ and all sufficiently large $\sec$'s, it holds that $\negl < \sec^{-c}$. 
+For an ensemble of distributions $\{D_\sec\}$ (parametrized with $\sec$),
+we denote by $x \leftarrow D_\sec$ a sampling of an instance according to the distribution $D_\sec$. 
+Given two ensembles of distributions $\{X_\sec\}$ and $\{Y_\sec\}$, 
+we use the notation $\{X_\sec\} \overset{\e(N)}{\equiv} \{Y_\sec\}$ 
+to say that the two ensembles are statistically indistinguishable if for any unbounded adversary $\A$, 
+
+$$
+\left|\Pr_{x\leftarrow X_\sec}\left[\A(1^\lambda, x)=1\right] - \Pr_{y\leftarrow Y_\sec}\left[\A(1^\lambda, y)=1\right] \right| \leq \e(\sec) \ .
+$$
+
+\paragraph{Random-access machines.}
+A RAM is an interactive Turing machine that consists of a memory and a CPU.  The
+memory is denoted as $\mem[\memsize,\blocksize]$, and is indexed by the logical
+address space $[N] = \{1,2,\ldots,N\}$. We refer to each memory word also as a
+\emph{block} and we use $\bsize$ to denote the bit-length of each block. The CPU
+has an internal state that consists of $O(1)$ words. The memory supports read/write
+instructions $(\op,\addr, \data)$, where $\op \in \{\Read,\Write\}$, $\addr \in
+[N]$ and $\data \in \bit^\bsize \cup \{\bot\}$.  If $\op = \Read$, then
+$\data=\bot$ and the returned value is the content of the block located in
+logical address $\addr$ in the memory. If $\op=\Write$, then the memory data in
+logical address $\addr$ is updated to $\data$.
+We use standard setting that $\blocksize = \Theta(\log N)$ (so a word can 
+store an address).
+%We follow the convention that the CPU performs one \emph{word-level operation} per unit time,
+%i.e., arithmetic operations (addition or subtraction), 
+%bitwise operations (AND, OR, NOT, or shift), memory accesses (read or write), or
+%evaluating a pseudorandom function~\cite{oram00,oram09,oram03,oblivhash,LarsenN18,panorama}.
+
+\medskip
+\noindent
+{\bf Obliviousness.}
+%\paragraph{Obliviousness.} 
+Our security definition is standard. A functionality $f$ is a (possibly randomized) RAM machine that gets some input $x$ and computes an output $y$. A RAM algorithm $M$ obliviously implements the functionality $f$ if: (1) it has the same input/output behavior as $f$; (2) There exists a simulator $\Sim(\abs{x})$ that produces access pattern that is statistically close to the access pattern of $M(x)$. I.e., it can simulates all memory addresses accessed by $M$ during the execution on $x$, without knowing $x$. In case where the functionality $f$ is randomized, we require that the joint distribution of the output of the functionality and the output of the simulator would be statistically close to the output of the algorithm $M$ and its access pattern. Formally, we let ${\sf AccPtrn}(M(x))$ denote the distribution of memory addresses a machine $M$ produces on an input $x$. We have:
+
+\begin{definition}[Oblivious machines]
+\label{defn:omachine}
+Let $f,M:\bit^* \rightarrow \bit^*$ be (possibly randomized) RAM programs. We say that $M$ {\em obliviously simulates $f$} if there exists a  simulator $\Sim$ and a negligible function $\epsilon(\cdot)$ such that  for any $\lambda$:% and any input $x$ of size $\lambda$ it holds that:
+$$
+\left\{\Sim(1^\lambda),f(x)\right\}_{x \in \bit^\lambda}\overset{\epsilon(\lambda)}{\equiv} \left\{ {\sf AccPtrn}(M(x)),M(x)\right\}_{x \in \bit^\lambda}
+$$
+If $\epsilon(\cdot)=0$, we say $M$ is perfectly oblivious. 
+\end{definition}
+
+The two main functionalities that we focus on in this paper are the following:
+\begin{MyItemize}
+\item {\bf Oblivious sort:} This is a deterministic functionality in which the input is an array $A[1,\ldots,n]$ of memory blocks (i.e., each $A[i] \in \bit^\blocksize$, representing a key). The goal is to output an array $A'[1,\ldots,n]$ which is some permutation $\pi:[n] \rightarrow [n]$ of the array $A$, i.e., $A'[i] = A[\pi(i)]$, such that $A'[1]\leq \ldots \leq A'[n]$. Obliviousness is defined using Definition~\ref{defn:omachine}. We denote this functionality as ${\cal F}_{\rm sort}$. 
+
+\item {\bf Oblivious permutation:} 
+This is a randomized functionality in which the input is an array $A[1,\ldots,n]$ of memory blocks. The functionality chooses a random permutation $\pi:[n] \rightarrow [n]$ and outputs an array $A'[1,\ldots,n]$ such that $A'[i] = A[\pi(i)]$ for every $i$. Obliviousness is defined using Definition~\ref{defn:omachine}. Note that the definition requires that the access pattern does not leak the permutation chosen by the functionality. We denote this functionality ${\cal F}_{\rm perm}$. 
+\end{MyItemize}
+

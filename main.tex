@@ -1,0 +1,51 @@
+\documentclass[twoside,leqno,twocolumn]{article}
+
+\usepackage[letterpaper]{geometry}
+\usepackage{ltexpprt}
+%\usepackage[max6]{authblk}
+\usepackage{xcolor}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{algpseudocode}
+\usepackage{capt-of}
+
+
+\newcommand{\X}{\mathbf{X}}
+
+\widowpenalty10000
+\clubpenalty10000
+
+\begin{document}
+
+\title{Bucket Oblivious Sort: An Extremely Simple Oblivious Sort}
+
+\author{Gilad Asharov \thanks{J.P. Morgan AI Research. Part of the work was done while the author was a post-doctoral fellow at Cornell Tech supported a Junior Fellow award from the Simons Foundation.} \quad
+T-H. Hubert Chan\thanks{The University of Hong Kong. Partially supported the Hong Kong RGC under the grant 17200418.} \quad
+Kartik Nayak\thanks{Duke University. Part of the work was done while the author was at University of Maryland.} \quad
+Rafael Pass\thanks{Cornell Tech.} \quad
+Ling Ren\thanks{University of Illinois Urbana-Champaign. Part of the work was done while the author was at MIT.} \quad
+Elaine Shi\thanks{Cornell University.}}
+
+\newcommand{\rl}[1]{{\footnotesize\color{orange}[Ling: #1]}}
+
+\date{}
+
+\maketitle
+
+\fancyfoot[R]{\scriptsize{Copyright \textcopyright\ 2020 by SIAM\\
+Unauthorized reproduction of this article is prohibited}}
+
+\begin{abstract}
+\input{abstract}
+\end{abstract}
+
+\input{intro}
+\input{algo}
+\input{extension}
+
+{
+\small
+\bibliographystyle{plain}
+\bibliography{refs}
+}
+\end{document}

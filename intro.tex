@@ -1,0 +1,62 @@
+%!TEX root = main.tex
+
+
+%\gnote{Write the paper in the client-server model, where the client can hold $4$ buckets at a time; Write the introduction as such; Move all other optimizations to "extensions"}
+
+\section{Introduction}
+
+With the increased use of outsourced storage and computation, privacy of the outsourced data has been of paramount importance. 
+A canonical setting is where a client with a small local
+storage outsources its encrypted data to an untrusted server. 
+In this setting, encryption alone is not sufficient to preserve privacy.
+The access patterns to the data may reveal sensitive information. 
+
+Two fundamental building blocks for oblivious storage and computation~\cite{goldreich1996software,goodrich2011privacy,oblivistore} are oblivious sorting and oblivious random permutation.
+In these two problems, an array of $n$ elements is stored on an untrusted server, encrypted under a trusted client's secret key.
+The client wishes to sort or permute the $n$ elements in a \emph{data-oblivious} fashion.
+That is, the sequence of accesses it makes to the server should not reveal any information about the $n$ elements (e.g., their relative ranking).
+The client has a small amount of local storage, the access pattern to which cannot be observed by the server.
+This work presents simple and efficient algorithms to these problems, named bucket oblivious sort and bucket oblivious random permutation.
+
+\subsection{State of the Affairs.}
+For oblivious sort, it is well-known that one can leverage 
+sorting networks such as AKS~\cite{aks} and Zigzag sort~\cite{zigzag}
+to obliviously sort $n$ elements in $O(n\log n)$ time. 
+Unfortunately, these algorithms are complicated and incur enormous constants rendering them completely impractical. 
+%\rl{What's expensive is approximate halvers, not expanders.} 
+Thus, almost all known practical implementations~\cite{oblivistore,oblivm,graphsc}
+instead employ the simple Bitonic sort algorithm~\cite{bitonic}. 
+While asymptotically worse, due to the small leading constants, it performs much better in practice.
+
+Oblivious random permutation (ORP) can be realized by assigning a sufficiently long random key to each element, and then obliviously sort the elements by the keys.
+To the best of our knowledge, this remains the most practical solution for ORP.
+It then follows that while $O(n \log n)$ algorithms exist in theory, practical instantiations resort to the $O(n \log^2 n)$ Bitonic sort.
+There exist algorithms such as the Melbourne
+Shuffle~\cite{ohrimenko2014melbourne} that do not rely on
+oblivious sort; but they require $O(\sqrt{n})$ client storage to permute $n$ elements.
+%Other approaches include the famous Thorp shuffle~\cite{thorp01} and random permutation networks~\cite{randpermnet}, but none of these solutions are competitive in performance either asymptotically or concretely.
+
+\subsection{Our Results.}
+The core of our algorithms is to assign each element to a random bin and then route the elements through a butterfly network to their assigned random bins. 
+This part is inspired by Bucket ORAM~\cite{fletcher2015bucket}. 
+%and Radix sort~\cite{cormen2009introduction}.
+
+In more detail, let $Z$ be a parameter that controls the error probability. 
+We divide the $n$ elements into $B=2n/Z$ buckets of size $Z/2$ each and add $Z/2$ dummy elements to each bucket.
+Now, imagine that these $B$ buckets form the inputs of a butterfly network --- for simplicity, assume $B$ is a power of two.
+Each element is uniformly randomly assigned to one of the $B$ output buckets, represented by a key of $\log B$ bits.
+The elements are then routed through the butterfly network to their respective destinations.
+Assuming the client can store two buckets locally at a time, at level $i$, the client simply reads elements from two buckets that are distance $2^i$ away in level $i$ and writes them to two adjacent buckets in level $i+1$, using the $i$-th bit of each element's key to make the routing decision. 
+We refer readers to Figure~\ref{fig:radix-sort} for a graphical illustration.
+
+The above algorithm is clearly oblivious.
+If no bucket overflows, all elements reach their assigned destinations. 
+By setting $Z$ appropriately, we can bound the overflow probability.
+
+Our bucket oblivious sort and bucket ORP build on top of the above oblivious random bin assignment. 
+To get ORP, simply remove all dummy elements, randomly permute each bucket of the final level, and concatenate the bins.
+To sort, we can simply apply any non-oblivious comparison-based sort (e.g., merge sort) on the randomly permuted elements. 
+
+We analyze the efficiency of our algorithms in Section~\ref{sec:efficiency}.
+If the client can store two buckets locally, then bucket oblivious sort is at most $3\times$ slower than the non-oblivious merge sort, and is at least $5\times$ faster than Bitonic sort for $n=2^{30}$.
+Therefore, we recommend bucket oblivious sort as an attractive alternative to Bitonic sort in practical implementations.

@@ -1,0 +1,42 @@
+\section{Extensions}
+\label{sec:extensions}
+
+\subsection{Extension to Constant Client Storage.}
+\label{sec:O1client}
+We now discuss how to extend our algorithms to the case where the client can only store $O(1)$ elements locally.
+
+Each \textsc{MergeSplit} can be realized with a single invocation of Bitonic sort.
+Concretely, we first scan the two input buckets to count how many real elements should go to $A'_0$ vs. $A'_1$, then tag the right number of dummy elements to go to either direction, and finally perform the Bitonic sort.
+
+Next, we need to permute each output bucket obliviously with $O(1)$ local storage. 
+This can be done as follows. 
+First, assign each element in a bucket a uniformly random label of $\Theta(\log n)$ bits. 
+Then, obliviously sort the elements by their random labels using Bitonic sort. 
+Since the labels are ``short'' (i.e., logarithmic in size), we may have collisions with $n^{-c}$ probability for some constant $c$, in which case we simply retry. 
+In expectation, it succeeds in $1+o(1)$ trials. 
+
+%or use the method in Chan et al.~\cite{opramdepth}[Lemma 10] \rl{what is this?}
+
+Since we invoke $B/2$ instances of Bitonic sort on $2Z$ elements at each level,
+the runtime is roughly $\log B \cdot B/2 \cdot 2Z \log^2 (2Z)) \approx 2 n\log n \log^2 Z$. 
+%In this case, our ORP and oblivious sort run in approximately $160n\log n$ time. \rl{Not competitive. is this part worth it?}
+
+\subsection{Better Asymptotic Performance.}
+Our algorithms can also be extended to have better asymptotic performance.
+For this instantiation, we use a primitive called oblivious tight compaction.
+Oblivious tight compaction receives $n$ elements each marked as either 0 or 1, and outputs a permutation of the $n$ elements such that all elements marked 0 appear before the elements that are marked 1. 
+It should not be hard to see that oblivious tight compaction can be used to achieve \textsc{MergeSplit}.
+Using the $O(1)$-client-storage and $O(n)$-time oblivious tight compaction construction from~\cite{asharov2018optorama}, bucket oblivious sort achieves $O(n\log n + n\log^2Z)$ runtime and $O(1)$ client storage.
+Setting $Z=\omega(1)\log n$, bucket oblivious sort achieves $O(n\log n)$ runtime, $O(1)$ client storage, and a negligible in $n$ error probability.
+
+\subsection{Locality.}
+We observe that our algorithms, when implemented properly, have good data locality.
+%(e.g.,~\cite{RuemmlerW94,ArgeFGV97,Vitter01,Vitter06}) \rl{cache oblivious?}
+The crux is to perform all $n/Z$ instances of 
+$\textsc{MergeSplit}$ in the same level of the butterfly network concurrently.
+Using a recent locality model from~\cite{asharov2019locality},
+our algorithms achieve $(3, O(\log n \log^2 Z)$) locality with $O(1)$ client storage.
+We refer readers to~\cite{asharov2019locality} for the definitions of their locality model and metric.
+
+%while accessing a small number of discontiguous regions. Specifically, the {\bf MergeSplit} operation works on 4 buckets at a time, while reading two buckets from the input layer, and writing to two consecutive buckets in the output layer. Moreover, the different invocations of {\bf MergeSplit} on the same layer deal with consecutive buckets. By carefully distributing the buckets among the different disks, and by using Bitonic sort while implementing the {\bf MergeSplit} operation, we conclude:
+
