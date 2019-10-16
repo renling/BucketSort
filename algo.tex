@@ -11,8 +11,10 @@ We first present the oblivious random bin assignment algorithm (Section~\ref{sec
 \newcommand{\val}{{\sf value}}
 \newcommand{\pref}{{\sf pref}}
 
+\input{code}
 \subsection{Oblivious Random Bin Assignment.}
 \label{sec:obin}
+
 
 The input to the oblivious random bin assignment algorithm is an array $\X$ of $n$ elements. 
 The algorithm first chooses a bucket size $Z$, 
@@ -27,7 +29,7 @@ The operation $(A'_0,A'_1)\leftarrow \textsc{MergeSplit}(A_0,A_1,i)$ involves fo
 $A'_0$ receives all the keys with $(i+1)$-th most significant bit (MSB) as 0 and $A'_1$ receives all the keys with $(i+1)$-th MSB as 1.
 
 
-\input{code}
+
 
 For now, assume the client can locally store two buckets.
 For each \textsc{MergeSplit}, it reads (and decrypts) the two input buckets, swaps elements in the two buckets according to the above rule, and writes to the two output buckets (after re-encryption).
@@ -96,19 +98,23 @@ The access patterns of a comparison-based sort depend only on the relative ranki
 We analyze the efficiency of our algorithms and compare them to classic non-oblivious oblivious sorting algorithms in Table~\ref{tab:compare}.
 We measure runtime using the number of memory accesses the clients needs to perform on the server.
 
-Merge sort, a well known non-oblivious sort, runs in $2n\log n$ time. 
-It has in $\log n$ stages; each stage merges smaller sorted subarrays into larger sorted subarrays,
-which reads and writes the entire array in the process.
-Bitonic sort uses $\frac 14 n\log^2 n$ comparisons.
-According to~\cite{zigzag}, the AKS sorting network has $13613047 n\log n$ comparisons and the Zigzag sort uses $19600n\log n$ comparisons (with best known explicit constructions). 
-Randomized Shellsort~\cite{RandShellsort} needs $6n\log n$ comparisons (there are $\log n$ iterations, six passes per iteration, and $n$ comparisons per pass). 
-The number of memory accesses is four times of the number of comparisons for Bitonic, AKS, Zigzag, and randomized Shellsort.
+
+
+% Merge sort, a well known non-oblivious sort, runs in $2n\log n$ time. 
+% It has in $\log n$ stages; each stage merges smaller sorted subarrays into larger sorted subarrays,
+% which reads and writes the entire array in the process.
+% Bitonic sort uses $\frac 14 n\log^2 n$ comparisons.
+% According to~\cite{zigzag}, the AKS sorting network has $13613047 n\log n$ comparisons and the Zigzag sort uses $19600n\log n$ comparisons (with best known explicit constructions). 
+% Randomized Shellsort~\cite{RandShellsort} needs $6n\log n$ comparisons (there are $\log n$ iterations, six passes per iteration, and $n$ comparisons per pass). 
+% The number of memory accesses is four times of the number of
+% comparisons for Bitonic, AKS, Zigzag, and randomized Shellsort.
+
 
 For our algorithms, assuming the client can store $2Z$ elements locally, each $2n$-sized array is read and written once and there are $\log(2n/Z)<\log n$ of them.
 So oblivious bin assignment and bucket ORP run in (less than) $4n\log n$ time.
 Note that the last step of ORP, i.e., permuting each output bucket, can be incorporated with the last level of oblivious bin assignment.
 Bucket oblivious sort additionally invokes a non-oblivious sort, and thus runs in $6n\log n$ time. 
-This is within $3\times$ of merge sort and beats Bitonic sort when $n$ is moderately large;
+This is within $3\times$ of Merge sort and beats Bitonic sort when $n$ is moderately large;
 for example, $5\times$ faster than Bitonic for $n=2^{30}$.
 For an overflow probability of $2^{-80}$ and most reasonable values of $n$, $Z = 512$ suffices. 
 
