@@ -28,7 +28,7 @@ Thus, almost all known practical implementations~\cite{oblivistore,oblivm,graphs
 instead employ the simple Bitonic sort algorithm~\cite{bitonic}. 
 While asymptotically worse, due to the small leading constants, it performs much better in practice.
 
-Oblivious random permutation (ORP) can be realized by assigning a sufficiently long random key to each element, and then obliviously sort the elements by the keys.
+Oblivious random permutation (ORP) can be realized by assigning a sufficiently long random key to each element, and then obliviously sorting the elements by the keys.
 To the best of our knowledge, this remains the most practical solution for ORP.
 It then follows that while $O(n \log n)$ algorithms exist in theory, practical instantiations resort to the $O(n \log^2 n)$ Bitonic sort.
 There exist algorithms such as the Melbourne
@@ -60,3 +60,8 @@ To sort, we can simply apply any non-oblivious comparison-based sort (e.g., merg
 We analyze the efficiency of our algorithms in Section~\ref{sec:efficiency}.
 If the client can store two buckets locally, then bucket oblivious sort is at most $3\times$ slower than the non-oblivious merge sort, and is at least $5\times$ faster than Bitonic sort for $n=2^{30}$.
 Therefore, we recommend bucket oblivious sort as an attractive alternative to Bitonic sort in practical implementations.
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End:

@@ -30,13 +30,13 @@ $A'_0$ receives all the keys with $(i+1)$-th most significant bit (MSB) as 0 and
 \input{code}
 
 For now, assume the client can locally store two buckets.
-For each \textsc{MergeSplit}, it reads (and decrypts) the two input buckets, swap elements in the two buckets according to the above rule, and writes to the two output buckets (after re-encryption).
+For each \textsc{MergeSplit}, it reads (and decrypts) the two input buckets, swaps elements in the two buckets according to the above rule, and writes to the two output buckets (after re-encryption).
 It is then easy to see that Algorithm~\ref{code:obin} is oblivious since the order in which the client reads and writes the buckets is fixed and independent of the input array.
 We discuss how to extend the algorithm to work with $O(1)$ client storage in Section~\ref{sec:O1client}. 
 
 When no bucket overflows, all real elements are correctly put into their assigned bins.
 We now show that the probability of overflow is exponentially small in $Z$. 
-Intuitively, this is because each bucket contains half dummy elements that serve as a form of ``slack'' to present overflow.
+Intuitively, this is because each bucket contains half dummy elements that serve as a form of ``slack'' to disallow overflow.
 
 \begin{lemma}
 \label{lemma:shuffle}
@@ -84,7 +84,7 @@ Therefore, for every $\pi$, $\Pr\left[\Pi = \pi \mid \vec{K}=\vec{k} \right] = \
 \[ \Pr\left[\Pi = \pi\right] = \sum_{\vec{k}} \Pr\left[\Pi = \pi \mid \vec{K}=\vec{k} \right] \cdot \Pr\left[\vec{K}=\vec{k}\right] = \frac {1}{n!} \]
 %&= \frac {1}{n!} \cdot \sum_{\vec{k}} \Pr\left[\vec{K}=\vec{k}\right] = \frac {1}{n!}
 
-The ORP fails only when the a certain bin overflows during the oblivious random bin assignment, which happens with $\epsilon(n,Z)$ probability.
+The ORP fails only when some bin overflows during the oblivious random bin assignment, which happens with $\epsilon(n,Z)$ probability.
 \end{proof}
 
 Once we have ORP, it is easy to achieve oblivious sort: just invoke any non-oblivious comparison-based sort after ORP.
@@ -93,7 +93,7 @@ The access patterns of a comparison-based sort depend only on the relative ranki
 \subsection{Efficiency.}
 \label{sec:efficiency}
 
-We analyze the efficiency of our algorithms and compared them to classic non-oblivious oblivious sorting algorithms in Table~\ref{tab:compare}.
+We analyze the efficiency of our algorithms and compare them to classic non-oblivious oblivious sorting algorithms in Table~\ref{tab:compare}.
 We measure runtime using the number of memory accesses the clients needs to perform on the server.
 
 Merge sort, a well known non-oblivious sort, runs in $2n\log n$ time. 
@@ -107,7 +107,7 @@ The number of memory accesses is four times of the number of comparisons for Bit
 For our algorithms, assuming the client can store $2Z$ elements locally, each $2n$-sized array is read and written once and there are $\log(2n/Z)<\log n$ of them.
 So oblivious bin assignment and bucket ORP run in (less than) $4n\log n$ time.
 Note that the last step of ORP, i.e., permuting each output bucket, can be incorporated with the last level of oblivious bin assignment.
-Bucket oblivious sort additional invokes a non-oblivious sort, and thus runs in $6n\log n$ time. 
+Bucket oblivious sort additionally invokes a non-oblivious sort, and thus runs in $6n\log n$ time. 
 This is within $3\times$ of merge sort and beats Bitonic sort when $n$ is moderately large;
 for example, $5\times$ faster than Bitonic for $n=2^{30}$.
 For an overflow probability of $2^{-80}$ and most reasonable values of $n$, $Z = 512$ suffices. 
