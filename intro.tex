@@ -41,7 +41,7 @@ The core of our algorithms is to assign each element to a random bin and then ro
 This part is inspired by Bucket ORAM~\cite{fletcher2015bucket}. 
 %and Radix sort~\cite{cormen2009introduction}.
 
-In more detail, let $Z$ be a parameter that controls the error probability. 
+In more detail, let $Z$ be a statistical security parameter that controls the error probability. 
 We divide the $n$ elements into $B=2n/Z$ buckets of size $Z/2$ each and add $Z/2$ dummy elements to each bucket.
 Now, imagine that these $B$ buckets form the inputs of a butterfly network --- for simplicity, assume $B$ is a power of two.
 Each element is uniformly randomly assigned to one of the $B$ output buckets, represented by a key of $\log B$ bits.
