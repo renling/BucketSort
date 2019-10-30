@@ -37,17 +37,10 @@ oblivious sort; but they require $O(\sqrt{n})$ client storage to permute $n$ ele
 %Other approaches include the famous Thorp shuffle~\cite{thorp01} and random permutation networks~\cite{randpermnet}, but none of these solutions are competitive in performance either asymptotically or concretely.
 
 \subsection{Our Results.}
-The core of our algorithms is to assign each element to a random bin and then route the elements through a butterfly network to their assigned random bins. 
-This part is inspired by Bucket ORAM~\cite{fletcher2015bucket}. 
-%and Radix sort~\cite{cormen2009introduction}.
-
-In more detail, let $Z$ be a statistical security parameter that controls the error probability. 
-We divide the $n$ elements into $B=2n/Z$ buckets of size $Z/2$ each and add $Z/2$ dummy elements to each bucket.
-Now, imagine that these $B$ buckets form the inputs of a butterfly network --- for simplicity, assume $B$ is a power of two.
-Each element is uniformly randomly assigned to one of the $B$ output buckets, represented by a key of $\log B$ bits.
-The elements are then routed through the butterfly network to their respective destinations.
-Assuming the client can store two buckets locally at a time, at level $i$, the client simply reads elements from two buckets that are distance $2^i$ away in level $i$ and writes them to two adjacent buckets in level $i+1$, using the $i$-th bit of each element's key to make the routing decision. 
-We refer readers to Figure~\ref{fig:radix-sort} for a graphical illustration.
+Let $Z$ be a statistical security parameter that controls the error probability. 
+Our bucket oblivious sort runs in $6n\log n$ time ($4n\log n$ for bucket ORP) and has an error probability around $e^{-Z/6}$ when the client can store $2Z$ elements locally.
+This is at most $3\times$ slower than the non-oblivious merge sort, and is at least $5\times$ faster than Bitonic sort for $n=2^{30}$ (cf. Table~\ref{tab:compare}).
+Therefore, we recommend bucket oblivious sort and ORP as attractive alternatives to Bitonic sort in practical implementations.
 
 \begin{figure*}[h!]
 \centering
@@ -86,6 +79,15 @@ number of comparisons.}
 
 \end{figure*}
 
+The core of our algorithms is to assign each element to a random bin and then route the elements through a butterfly network to their assigned random bins. 
+This part is inspired by Bucket ORAM~\cite{fletcher2015bucket}. 
+In more detail, we divide the $n$ elements into $B=2n/Z$ buckets of size $Z/2$ each and add $Z/2$ dummy elements to each bucket.
+Now, imagine that these $B$ buckets form the inputs of a butterfly network --- for simplicity, assume $B$ is a power of two.
+Each element is uniformly randomly assigned to one of the $B$ output buckets, represented by a key of $\log B$ bits.
+The elements are then routed through the butterfly network to their respective destinations.
+Assuming the client can store two buckets locally at a time, at level $i$, the client simply reads elements from two buckets that are distance $2^i$ away in level $i$ and writes them to two adjacent buckets in level $i+1$, using the $i$-th bit of each element's key to make the routing decision. 
+We refer readers to Figure~\ref{fig:radix-sort} for a graphical illustration.
+
 The above algorithm is clearly oblivious.
 If no bucket overflows, all elements reach their assigned destinations. 
 By setting $Z$ appropriately, we can bound the overflow probability.
@@ -94,11 +96,10 @@ Our bucket oblivious sort and bucket ORP build on top of the above oblivious ran
 To get ORP, simply remove all dummy elements, randomly permute each bucket of the final level, and concatenate the bins.
 To sort, we can simply apply any non-oblivious comparison-based sort (e.g., merge sort) on the randomly permuted elements. 
 
-We analyze the efficiency of our algorithms in Section~\ref{sec:efficiency}.
-If the client can store two buckets locally, then bucket oblivious sort is at most $3\times$ slower than the non-oblivious merge sort, and is at least $5\times$ faster than Bitonic sort for $n=2^{30}$.
-Therefore, we recommend bucket oblivious sort as an attractive alternative to Bitonic sort in practical implementations.
-
-In Section~\ref{sec:extensions}, we will discuss how to extend our algorithms to use constant client storage, achieve better asymptotic complexity, and preserve locality.
+In Section~\ref{sec:O1client}, we will discuss how to extend our algorithms to support constant client storage
+We can rely on Bitonic sort to realize the ${\bf MergeSplit}$ operation, which would result in $\approx 2n\log n \log^2 Z$ runtime.
+Recently, Asharov et al.~\cite{AsharovCNPRS19} initiate the study of data locality on oblivious algorithms. 
+We observe that our algorithms are be made locality-friendly, and refer readers to Appendix~\ref{sec:locality} for the exact definitions and complexity measures.
 
 %%% Local Variables:
 %%% mode: latex

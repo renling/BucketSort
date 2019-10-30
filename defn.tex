@@ -1,6 +1,3 @@
-
-\newcommand{\memsize}{{N}}
-\newcommand{\blocksize}{{b}}
 \section{Definitions}
 \label{sec:defs}
 
@@ -40,10 +37,7 @@ store an address).
 %bitwise operations (AND, OR, NOT, or shift), memory accesses (read or write), or
 %evaluating a pseudorandom function~\cite{oram00,oram09,oram03,oblivhash,LarsenN18,panorama}.
 
-\medskip
-\noindent
-{\bf Obliviousness.}
-%\paragraph{Obliviousness.} 
+\paragraph{Obliviousness.} 
 Our security definition is standard. A functionality $f$ is a (possibly randomized) RAM machine that gets some input $x$ and computes an output $y$. A RAM algorithm $M$ obliviously implements the functionality $f$ if: (1) it has the same input/output behavior as $f$; (2) There exists a simulator $\Sim(\abs{x})$ that produces access pattern that is statistically close to the access pattern of $M(x)$. I.e., it can simulates all memory addresses accessed by $M$ during the execution on $x$, without knowing $x$. In case where the functionality $f$ is randomized, we require that the joint distribution of the output of the functionality and the output of the simulator would be statistically close to the output of the algorithm $M$ and its access pattern. Formally, we let ${\sf AccPtrn}(M(x))$ denote the distribution of memory addresses a machine $M$ produces on an input $x$. We have:
 
 \begin{definition}[Oblivious machines]

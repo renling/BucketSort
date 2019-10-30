@@ -9,9 +9,17 @@
 \usepackage{algpseudocode}
 \usepackage{capt-of}
 
+% for appendix
+\usepackage{xspace}
+\usepackage{mathtools}
+\DeclarePairedDelimiter{\abs}{\lvert}{\rvert}
+\newtheorem{definition}{Definition}
+\newtheorem{claim}{Claim}
+\renewcommand{\paragraph}[1]{\medskip\noindent\textbf{#1}}
 
 \newcommand{\X}{\mathbf{X}}
 
+\sloppy
 \widowpenalty10000
 \clubpenalty10000
 
@@ -43,9 +51,13 @@ Unauthorized reproduction of this article is prohibited}}
 \input{algo}
 \input{extension}
 
-{
-\small
 \bibliographystyle{plain}
 \bibliography{refs}
-}
+
+
+\appendix
+\input{macro}
+\input{defn}
+\input{locality}
+
 \end{document}
