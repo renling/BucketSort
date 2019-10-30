@@ -1,0 +1,55 @@
+\section{Locality of Bucket Oblivious Sort}
+\label{sec:locality}
+
+The work of~\cite{AsharovCNPRS19} initiate a study on locality in oblivious algorithms. Traditionally, in many instances oblivious algorithm completely destroys the locality of the algorithm compared to their non-oblivious counterpart. The work of~\cite{AsharovCNPRS19} defines a notion of locality, as well as locality preserving oblivious RAMs. It defines locality-friendly oblivious sort, which also play a pivotal role in their construction of locality-preserving oblivious RAM. In this section, we define locality in algorithms, and show that one variant of bucket sort is in fact a locality-friendly oblivious sort. It is asymptotically more efficient than all other known sorts. We start with a definition of locality in RAM machines. We then overview the locality of known sorting algorithms, and then we conclude with the locality of our bucket sort. 
+
+
+
+%An Oblivious RAM (or ORAM) is a cryptographic primitive that provably hides
+%access patterns to data for an arbitrary functionality
+%$f$. At a high level, in order to hide access patterns, ORAM schemes
+%(pseudo-)randomly permute blocks and access one of the shuffled
+%blocks. An important metric that has been traditionally overlooked in ORAM construction is the \emph{locality} of the compiler. In order to hide the access pattern, ORAM compilers usually permute elements around the memory, and completely destroys the locality of the function $f$. As a result, if a client reads a large file consisting of
+%$O(N)$ contiguous blocks, ORAM schemes end up accessing $\Omega(N
+%\log N)$  discontiguous disk locations. The work of~\cite{AsharovCNPRS19} initiate a study of locality-preserving oblivious RAMs: oblivious RAM compilers that preserve the locality of the input program. Using our bucket sort, we obtain new oblivious sort that are beneficial for such private-preserving oblivious RAMs, and can accelerate their performance. 
+%We start with first defining the notion of locality, then with analyzing the locality of our bucket sort, and then concluding the section with stating the improvements when applying our techniques to locality preserving oblivious RAMs. 
+
+
+\paragraph{Modeling locality.}
+Towards understanding the notion of locality, it might be convenient to view the memory as a rotational hard drive. The program can submit two types of commands to the memory: (1) read the next contiguous address; (2) jump to a new address (``seek'' in the systems literature). While both types of operations contribute to the bandwidth measure, only the latter one contributes to the locality measure. The work of~\cite{AsharovCNPRS19} also deals with memory that contain more than one disk. This allows some additional flexibility, and distinguishing between different degrees of locality: while a program that just perform random seeks is definitely not local, a program that consists of iterating in parallel on two arrays is local. Having two disks allows running on these two arrays in parallel without introducing any ``jumps''. 
+
+More formally, a memory is denoted as $\mem[N,b, D]$, consisting of $D$ disks, indexed by the address space $[N]= \{1,2,\ldots,N\}$, where $D \cdot N$ is the size of the logical memory. We refer to each memory word also as block and we use $b$ to denote the bit-length of each block. The memory supports the following two types of instructions.
+\begin{MyItemize}
+\item {\bf Move head operation $({\sf move},{\sf d},{\sf addr})$} moves the head of the ${\sf d}$-disk (${\sf d} \in [{\sf D}]$) to point to address ${\sf addr}$ within that disk.
+\item {\bf A read/write operation $({\sf op},{\sf d},{\sf data})$}, where ${\sf op} \in \{\Read,\Write\}$, ${\sf d} \in [{\sf D}]$ and ${\sf data} \in \bit^{b} \cup \{\bot\}$. If ${\sf op} = \Read$ then ${\sf data}$ and $\mem$ should return the content of the block pointed to by the ${\sf d}$-disk; If ${\sf op} = \Write$ then the block pointed to the ${\sf d}$-th disk is updated to {\sf data}. The ${\sf d}$-th head is then incremented to point to the next consecutive address, and wrapped around when the end of the disk is reached. 
+\end{MyItemize}
+
+\paragraph{Locality.}
+A sequence of operations has $({\sf D},\ell)$-locality if it contains $\ell$ {\sf move} operations to a memory equipped with {\sf D} disks. 
+
+\paragraph{Locality in oblivious sorts.}
+As observed in~\cite{AsharovCNPRS19}, not all oblivious sorting
+algorithms are ``locality-friendly''. For instance,
+AKS~\cite{aks} and Zig-zag sort~\cite{zigzag} are described with a sorting circuit with wiring that has good randomness like properties. For instance, in~\cite{aks}, the wiring involve random graphs which have proven random walk properties. This makes these algorithms difficult to implement with small locality consuming only a small number of disks. 
+
+In addition, the work of~\cite{AsharovCNPRS19} shows that Bitonic sort, when implemented in a particular method, can be described as a perfect oblivious sorting algorithm that sorts $n$ elements in $O(n \log^2 n)$ bandwidth and $(2,O(\log^2n))$-locality. 
+%
+We are not aware of other locality-friendly oblivious sort algorithms. 
+
+\paragraph{Bucket sort.} 
+When instantiating \textsc{MergeSplit} using Bitonic sort, our algorithm satisfies the following:
+
+\begin{theorem}[Oblivious Sort] 
+Bucket oblivious sort obliviously simulates $f_{\sf sort}$ with $\negl$ statistical failure and $O(n \log n (\log\log\lambda)^2)$ work and $(3, O(\log n (\log\log\lambda)^2))$ locality. 
+\end{theorem}
+
+In order to see that, we just observe that all we have to implement is \emph{concurrent execution of bitonic sorts}. That is, let $n$ be the array size and $k$ be the segment size.
+If we naively sort each segment sequential, we would incur $(2, O((n/k) \cdot \log^2 k))$ locality. 
+We can save the factor $n/k$ by running each step of the bitonic sort over all instances before starting the next step. 
+Each step requires a scan on the segments, so after finishing one segment, the memory heads are right at the start of the next segment.
+It is not hard to see that this approach of ``striped concurrent execution''
+achieves $(2, O(\log^2 k))$ locality. In particular, 
+Concurrent Bitonic sort can obliviously sort all disjoint size-$k$ segments
+of a length-$n$ array in $O(n \cdot \log^2 k)$ work and $(2,O(\log^2k))$ locality.
+
+
