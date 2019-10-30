@@ -15,12 +15,14 @@ We first present the oblivious random bin assignment algorithm (Section~\ref{sec
 \subsection{Oblivious Random Bin Assignment.}
 \label{sec:obin}
 
-
 The input to the oblivious random bin assignment algorithm is an array $\X$ of $n$ elements. 
+The goal s to randomly and obliviously distribute the elements into bins. 
+
 The algorithm first chooses a bucket size $Z$, 
 and constructs $B=\lceil 2n/Z \rceil$ buckets each of size $Z$.
-Without loss of generality, assume $B$ is a power of $2$ --- if not, pad it to the next power of 2;
-also assume elements in $\X$ are distinct --- if not, we can use the indices of the elements within $\X$ to break ties.
+Without loss of generality, assume $B$ is a power of $2$ --- if not, pad it to the next power of 2.
+
+%also assume elements in $\X$ are distinct --- if not, we can use the indices of the elements within $\X$ to break ties.
 
 Figure~\ref{fig:radix-sort} gives a graphic illustration of the algorithm for 8 input buckets and Algorithm~\ref{code:obin} gives the pseudocode.
 Each element in $\X$ is assigned a random key in $[0, B-1]$ which represents a destination bucket.
@@ -29,12 +31,10 @@ The operation $(A'_0,A'_1)\leftarrow \textsc{MergeSplit}(A_0,A_1,i)$ involves fo
 $A'_0$ receives all the keys with $(i+1)$-th most significant bit (MSB) as 0 and $A'_1$ receives all the keys with $(i+1)$-th MSB as 1.
 
 
-
-
 For now, assume the client can locally store two buckets.
 For each \textsc{MergeSplit}, it reads (and decrypts) the two input buckets, swaps elements in the two buckets according to the above rule, and writes to the two output buckets (after re-encryption).
 It is then easy to see that Algorithm~\ref{code:obin} is oblivious since the order in which the client reads and writes the buckets is fixed and independent of the input array.
-We discuss how to extend the algorithm to work with $O(1)$ client storage in Section~\ref{sec:O1client}. 
+%We discuss how to extend the algorithm to work with $O(1)$ client storage in Section~\ref{sec:O1client}. 
 
 When no bucket overflows, all real elements are correctly put into their assigned bins.
 We now show that the probability of overflow is exponentially small in $Z$. 

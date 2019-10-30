@@ -1,13 +1,6 @@
 \begin{figure*}[h!]
 \centering
 
-\includegraphics[width=0.7\textwidth]{RadixBucketSort1.pdf}
-\captionof{figure}{Oblivious random bin assignment with 8 buckets.}
-%The \textsc{MergeSplit} procedure takes elements from two buckets at level $i$ and put them into two buckets at level $i+1$, according to the $(i+1)$-th most significant bit of the keys. 
-%At level $i$, every $2^{i}$ consecutive buckets are semi-sorted by the most significant $i$ bits of the keys.
-\label{fig:radix-sort}
-
-\bigskip
 \begin{algorithm}[Oblivious Random Bin Assignment]
 \begin{algorithmic}
 \State
@@ -39,32 +32,6 @@
 \end{algorithmic}
 \label{code:obin}
 \end{algorithm}
-
-\bigskip
-%\begin{table*}[t]
-\centering
-\begin{tabular}{|c|c|c|c|c|}
-    \hline
-    Algorithm & Oblivious & Client storage & Runtime & Error probability \\
-    \hline
-    Merge sort & No & $O(1)$ & $2n \log n$ & 0 \\
-    Bitonic sort & Yes & $O(1)$ & $n\log^2 n$ & 0 \\
-    AKS sort~\cite{aks} & Yes & $O(1)$ & $5.4\times10^7 \times n\log n$ & 0 \\
-    Zig-zag sort~\cite{zigzag} & Yes & $O(1)$ & $8\times10^4 \times n\log n$ & 0 \\
-    Randomized Shellsort~\cite{RandShellsort} & Yes & $O(1)$ & $24n\log n$ & $\approx n^{-3}$ \\
-    \hline
-    \textbf{Bucket oblivious sort} & Yes & $2Z$ & $6 n\log n$ & $\approx e^{-Z/6}$\\
-    \textbf{Bucket oblivious sort} & Yes & $O(1)$ & $\approx 2n\log n \log^2 Z$ & $\approx e^{-Z/6}$ \\
-    \hline   
-\end{tabular}
-\captionof{table}{\textbf{Runtime of bucket oblivious sort and
-    classic non-oblivious and oblivious sort algorithms.} Bitonic
-sort requires $\frac 14 n \log^2 n$ comparisons. Runtime for AKS
-sort and Zig-zag sort are cited from \cite{zigzag}. Runtime
-represents the number of memory accesses, which is four times the
-number of comparisons.}
-\label{tab:compare}
-%\end{table*}
 
 \end{figure*}
 %%% Local Variables:

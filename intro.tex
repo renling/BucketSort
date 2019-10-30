@@ -49,6 +49,43 @@ The elements are then routed through the butterfly network to their respective d
 Assuming the client can store two buckets locally at a time, at level $i$, the client simply reads elements from two buckets that are distance $2^i$ away in level $i$ and writes them to two adjacent buckets in level $i+1$, using the $i$-th bit of each element's key to make the routing decision. 
 We refer readers to Figure~\ref{fig:radix-sort} for a graphical illustration.
 
+\begin{figure*}[h!]
+\centering
+\includegraphics[width=0.9\textwidth]{RadixBucketSort1.pdf}
+\captionof{figure}{\textbf{Oblivious random bin assignment with 8 buckets.}
+The \textsc{MergeSplit} procedure takes elements from two buckets at level $i$ and put them into two buckets at level $i+1$, according to the $(i+1)$-th most significant bit of the keys. 
+At level $i$, every $2^{i}$ consecutive buckets are semi-sorted by the most significant $i$ bits of the keys.}
+\label{fig:radix-sort}
+
+%\begin{table*}[t]
+\bigskip
+\bigskip
+\centering
+\begin{tabular}{|c|c|c|c|c|}
+    \hline
+    Algorithm & Oblivious & Client storage & Runtime & Error probability \\
+    \hline
+    Merge sort & No & $O(1)$ & $2n \log n$ & 0 \\
+    Bitonic sort & Yes & $O(1)$ & $n\log^2 n$ & 0 \\
+    AKS sort~\cite{aks} & Yes & $O(1)$ & $5.4\times10^7 \times n\log n$ & 0 \\
+    Zig-zag sort~\cite{zigzag} & Yes & $O(1)$ & $8\times10^4 \times n\log n$ & 0 \\
+    Randomized Shellsort~\cite{RandShellsort} & Yes & $O(1)$ & $24n\log n$ & $\approx n^{-3}$ \\
+    \hline
+    \textbf{Bucket oblivious sort} & Yes & $2Z$ & $6 n\log n$ & $\approx e^{-Z/6}$\\
+    \textbf{Bucket oblivious sort} & Yes & $O(1)$ & $\approx 2n\log n \log^2 Z$ & $\approx e^{-Z/6}$ \\
+    \hline   
+\end{tabular}
+\captionof{table}{\textbf{Runtime of bucket oblivious sort and
+classic non-oblivious and oblivious sort algorithms.} Bitonic
+sort requires $\frac 14 n \log^2 n$ comparisons. The number of comparisons for AKS
+sort and Zig-zag sort are cited from \cite{zigzag}. Runtime
+represents the number of memory accesses, which is four times the
+number of comparisons.}
+\label{tab:compare}
+%\end{table*}
+
+\end{figure*}
+
 The above algorithm is clearly oblivious.
 If no bucket overflows, all elements reach their assigned destinations. 
 By setting $Z$ appropriately, we can bound the overflow probability.
@@ -60,6 +97,8 @@ To sort, we can simply apply any non-oblivious comparison-based sort (e.g., merg
 We analyze the efficiency of our algorithms in Section~\ref{sec:efficiency}.
 If the client can store two buckets locally, then bucket oblivious sort is at most $3\times$ slower than the non-oblivious merge sort, and is at least $5\times$ faster than Bitonic sort for $n=2^{30}$.
 Therefore, we recommend bucket oblivious sort as an attractive alternative to Bitonic sort in practical implementations.
+
+In Section~\ref{sec:extensions}, we will discuss how to extend our algorithms to use constant client storage, achieve better asymptotic complexity, and preserve locality.
 
 %%% Local Variables:
 %%% mode: latex
