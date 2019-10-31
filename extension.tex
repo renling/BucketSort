@@ -7,19 +7,19 @@
 \label{sec:O1client}
 We now discuss how to extend our algorithms to the case where the client can only store $O(1)$ elements locally.
 
-Each \textsc{MergeSplit} can be realized with a single invocation of Bitonic sort.
-Concretely, we first scan the two input buckets to count how many real elements should go to $A'_0$ vs. $A'_1$, then tag the right number of dummy elements to go to either direction, and finally perform the Bitonic sort.
+Each \textsc{MergeSplit} can be realized with a single invocation of bitonic sort.
+Concretely, we first scan the two input buckets to count how many real elements should go to $A'_0$ vs. $A'_1$, then tag the right number of dummy elements to go to either direction, and finally perform the bitonic sort.
 
 Next, we need to permute each output bucket obliviously with $O(1)$ local storage. 
 This can be done as follows. 
 First, assign each element in a bucket a uniformly random label of $\Theta(\log n)$ bits. 
-Then, obliviously sort the elements by their random labels using Bitonic sort. 
+Then, obliviously sort the elements by their random labels using bitonic sort. 
 Since the labels are ``short'' (i.e., logarithmic in size), we may have collisions with $n^{-c}$ probability for some constant $c$, in which case we simply retry. 
 In expectation, it succeeds in $1+o(1)$ trials. 
 
 %or use the method in Chan et al.~\cite{opramdepth}[Lemma 10] \rl{what is this?}
 
-Since we invoke $B/2$ instances of Bitonic sort on $2Z$ elements at each level,
+Since we invoke $B/2$ instances of bitonic sort on $2Z$ elements at each level,
 the runtime is roughly $\log B \cdot B/2 \cdot 2Z \log^2 (2Z)) \approx 2 n\log n \log^2 Z$. 
 %In this case, our ORP and oblivious sort run in approximately $160n\log n$ time. \rl{Not competitive. is this part worth it?}
 
@@ -51,7 +51,7 @@ design of oblivious algorithms,
 inevitably Asharov et al.~\cite{AsharovCNPRS19}
 show a locality-friendly sorting algorithm.
 Concretely, they show that there is a specific way to implement
-the Bitonic sort meta-algorithm,
+the bitonic sort meta-algorithm,
 such that the entire algorithm requires accessing 
 $O(\log^2 n)$ distinct memory regions (i.e., as many as the depth of the sorting network) 
 require only 2 disks to be available --- in other words,
@@ -64,7 +64,7 @@ by an almost logarithmic
 factor improvement in locality. % both runtime and locality.
 To achieve this, the crux is to implement all $n/Z$ instances of 
 $\textsc{MergeSplit}$ in the same layer of the butterfly network 
-while accessing a small number of discontiguous regions. Specifically, the $\textsc{MergeSplit}$ operation works on 4 buckets at a time, while reading two buckets from the input layer, and writing to two consecutive buckets in the output layer. Moreover, the different invocations of $\textsc{MergeSplit}$ on the same layer deal with consecutive buckets. By carefully distributing the buckets among the different disks, and by using Bitonic sort while implementing the $\textsc{MergeSplit}$ operation, we conclude:
+while accessing a small number of discontiguous regions. Specifically, the $\textsc{MergeSplit}$ operation works on 4 buckets at a time, while reading two buckets from the input layer, and writing to two consecutive buckets in the output layer. Moreover, the different invocations of $\textsc{MergeSplit}$ on the same layer deal with consecutive buckets. By carefully distributing the buckets among the different disks, and by using bitonic sort while implementing the $\textsc{MergeSplit}$ operation, we conclude:
 
 \begin{corollary}
 There exists a statistically oblivious sort algorithm which, except with $\approx e^{-Z/6}$ probability, completes in $O(n \log n \log^2 Z)$ work and with $(3, O(\log n \log^2 Z)$) locality.

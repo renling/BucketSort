@@ -2,7 +2,7 @@
 
 \newcommand{\memsize}{{N}}
 \newcommand{\blocksize}{{b}}
-\newcommand{\negl}{{\sf negl}}
+%\newcommand{\negl}{{\sf negl}}
 \newcommand{\Y}{{\bf Y}}
 
 %\section*{Appendix}
@@ -12,21 +12,17 @@
 \label{sec:defs}
 
 \paragraph{Notations and conventions.}
-We let $[n]$ denote the set $\{1,\ldots,n\}$. Throughout this paper, for underlying building blocks, we will use
-$n$ to denote the size of the instance and use $\lambda$ 
-to denote the security parameter. 
-%For our final ORAM constructions, we use $N$ to denote the size of the total 
-%logical memory size as well as the security parameter --- note that 
-%this follows the convention of most existing works on ORAMs~\cite{oram00,oram10,oram09,oram03,asiacrypt11,pathoram,circuitoram}.
-A function $\negl$ is called \emph{negligible} if for any constant $c > 0$ and all sufficiently large $\sec$'s, it holds that $\negl < \sec^{-c}$. 
+We let $[n]$ denote the set $\{1,\ldots,n\}$. Throughout this paper, we will use
+$n$ to denote the size of the instance and use $\lambda$ to denote the security parameter. 
+%A function $\negl$ is called \emph{negligible} if for any constant $c > 0$ and all sufficiently large $\sec$'s, it holds that $\negl < \sec^{-c}$. 
 For an ensemble of distributions $\{D_\sec\}$ (parametrized with $\sec$),
 we denote by $x \leftarrow D_\sec$ a sampling of an instance according to the distribution $D_\sec$. 
-Given two ensembles of distributions $\{X_\sec\}$ and $\{Y_\sec\}$, 
-we use the notation $\{X_\sec\} \overset{\e(\sec)}{\equiv} \{Y_\sec\}$ 
-to say that the two ensembles are statistically indistinguishable if for any unbounded adversary $\A$, 
-$
+Given two ensembles of distributions $\{X_\sec\}$~and~$\{Y_\sec\}$,
+they are $\e(\sec)$-statistically-indistinguishable, denoted $\{X_\sec\} \overset{\e(\sec)}{\equiv} \{Y_\sec\}$, 
+if for any unbounded adversary $\A$, 
+\[
 \left|\Pr_{x\leftarrow X_\sec}\left[\A(1^\lambda, x)=1\right] - \Pr_{y\leftarrow Y_\sec}\left[\A(1^\lambda, y)=1\right] \right| \leq \e(\sec) \ .
-$
+\]
 
 
 %For simplicity, we will omit writing the unary security parameter input $1^\lambda$ to all procedures.

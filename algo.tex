@@ -7,7 +7,7 @@
 \label{sec:construction}
 \label{sec:random-bin-assignment}
 
-We first present the oblivious random bin assignment algorithm (Section~\ref{sec:obin})  and then use it to implement our Bucket Oblivious Random Permutation (Section~\ref{sec:ORP}) and our Bucket Oblivious Sort (Section~\ref{sec:osort}).
+We first present the oblivious random bin assignment algorithm (Section~\ref{sec:obin})  and then use it to implement our bucket oblivious random permutation (Section~\ref{sec:ORP}) and bucket oblivious sort (Section~\ref{sec:osort}).
 
 \newcommand{\val}{{\sf value}}
 \newcommand{\pref}{{\sf pref}}
@@ -19,8 +19,8 @@ We first present the oblivious random bin assignment algorithm (Section~\ref{sec
 The input to the oblivious random bin assignment algorithm is an array $\X$ of $n$ elements. 
 The goal is to obliviously and uniformly randomly distribute the elements into a set of bins. Each element is assigned to independent random bin, and elements are then routed into the bins obliviously. 
 
-The algorithm first chooses a bucket size $Z$, 
-and constructs $B=\lceil 2n/Z \rceil$ buckets each of size $Z$.
+The algorithm first chooses a bucket size $Z$, which can be set to the security parameter $\sec$. 
+Then, it constructs $B=\lceil 2n/Z \rceil$ buckets each of size $Z$.
 Without loss of generality, assume $B$ is a power of $2$ --- if not, pad it to the next power of 2. Note that the algorithm introduces $n$ dummy elements, and the output is twice the size of the input array. %If needed, see Appendix~\ref{appx:formal} for a formal definition of the functionality. 
 
 %also assume elements in $\X$ are distinct --- if not, we can use the indices of the elements within $\X$ to break ties.
@@ -92,7 +92,7 @@ Therefore, for every $\pi$, $\Pr\left[\Pi = \pi \mid \vec{K}=\vec{k} \right] = \
 \[ \Pr\left[\Pi = \pi\right] = \sum_{\vec{k}} \Pr\left[\Pi = \pi \mid \vec{K}=\vec{k} \right] \cdot \Pr\left[\vec{K}=\vec{k}\right] = \frac {1}{n!} \]
 %&= \frac {1}{n!} \cdot \sum_{\vec{k}} \Pr\left[\vec{K}=\vec{k}\right] = \frac {1}{n!}
 
-The ORP fails only when some bin overflows during the oblivious random bin assignment, which happens with $\epsilon(n,Z)$ probability.
+The ORP fails only when some bin overflows during the oblivious random bin assignment, which happens with $\epsilon(n,Z)$ probability by Lemma~\ref{lemma:shuffle}.
 \end{proof}
 
 \subsection{Bucket Oblivious Sort.}
@@ -124,8 +124,8 @@ For our algorithms, assuming the client can store $2Z$ elements locally, each $2
 So oblivious bin assignment and bucket ORP run in (less than) $4n\log n$ time.
 Note that the last step of ORP, i.e., permuting each output bucket, can be incorporated with the last level of oblivious bin assignment.
 Bucket oblivious sort additionally invokes a non-oblivious sort, and thus runs in $6n\log n$ time. 
-This is within $3\times$ of Merge sort and beats Bitonic sort when $n$ is moderately large;
-for example, $5\times$ faster than Bitonic for $n=2^{30}$.
+This is within $3\times$ of merge sort and beats bitonic sort when $n$ is moderately large;
+for example, $5\times$ faster than bitonic for $n=2^{30}$.
 For an overflow probability of $2^{-80}$ and most reasonable values of $n$, $Z = 512$ suffices. 
 
 
