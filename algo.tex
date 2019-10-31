@@ -21,7 +21,7 @@ The goal is to obliviously and uniformly randomly distribute the elements into a
 
 The algorithm first chooses a bucket size $Z$, 
 and constructs $B=\lceil 2n/Z \rceil$ buckets each of size $Z$.
-Without loss of generality, assume $B$ is a power of $2$ --- if not, pad it to the next power of 2. Note that the algorithm introduces $n$ dummy elements, and the output is twice the size of the input array. If needed, see Appendix~\ref{appx:formal} for a formal definition of the functionality. 
+Without loss of generality, assume $B$ is a power of $2$ --- if not, pad it to the next power of 2. Note that the algorithm introduces $n$ dummy elements, and the output is twice the size of the input array. %If needed, see Appendix~\ref{appx:formal} for a formal definition of the functionality. 
 
 %also assume elements in $\X$ are distinct --- if not, we can use the indices of the elements within $\X$ to break ties.
 
@@ -59,28 +59,32 @@ Hence, a union bound over all levels and all buckets
 shows that overflow happens with less than $B \cdot \log B \cdot e^{-Z/6} = \epsilon(n,Z)$ probability.
 \end{proof}
 
-In Appendix~\ref{appx:formal} we formally describe the ideal functionality of oblivious random bin assignment, and show that the above describe algorithm obliviously implements this functionality. 
+%In Appendix~\ref{appx:formal} we formally describe the ideal functionality of oblivious random bin assignment, and show that the above describe algorithm obliviously implements this functionality. 
 
 \subsection{Bucket Oblivious Random Permutation.}
 \label{sec:ORP}
 
 After performing the oblivious random bin assignment, ORP can be simply achieved as follows:
-delete dummy elements from each bin, locally permute each bin, and finally concatenate the bins.
+scan the array and delete dummy elements from each bin (note that within each bin it is guaranteed that the real elements appear before the dummy elements). Then obliviously permute each bin and finally concatenate all bins.  We have:
 
-The ORP reveals the loads of the output buckets of bin assignment,
-These loads entirely depend on the random keys and do not reveal any information about the input array. 
-The ORP algorithm is clearly oblivious. 
-We next show that it gives a random permutation.
+%The ORP reveals the loads of the output buckets of bin assignment, that is, the number of real elements in each bucket. 
 
 \begin{lemma}
-Bucket ORP outputs a random permutation of the input array except for $\epsilon(n,Z)$ probability.
+Bucket ORP oblivious implement the permutation functionality except for $\e(n,Z)$ probability. 
 \end{lemma}
+
 \begin{proof}
-Let $\Pi$ be permutation corresponding to the output of the ORP algorithm.
-First, let us assume the oblivious random bin assignment procedure does not encounter any overflow.
-Let $\vec{K} = (K_0, K_1, \ldots, K_{B-1})$ be the load of the random bin assignment,
-i.e., the $i$-th output bucket contains $K_i$ real elements. 
-For a particular load $\vec{k}=(k_0, k_1, \ldots, k_{B-1})$, there are ${n \choose k_0,\ldots,k_{B-1}}$ ways to distribute the elements into the bins while achieving load $\vec{k}$.
+We first describe the simulator $\Sim$. 
+The access pattern of the oblivious bin assignment algorithm is deterministic and the same for every input, where the overflow even is independent of the input itself. Therefore, it is easy to simulate the bin assignment. 
+The simulator then pretends to simulate the randomly permuting of each bin. 
+Then, 
+the simulator chooses random loads $\vec{K} = (K_0,K_1,\ldots,K_{B-1})$, where $K_i$ is the load of the real elements in the $i$th bin. This is done by simply throwing $n$ elements into $B$ bins (``in the head''). If there is some $i$ for which $K_i > Z$ then the simulator aborts. The removal of the dummy elements is equivalent to the revealing of these loads. Specifically, given 
+
+Clearly, $\vec{K}$ are distributed the same as in the real execution. The only difference between the simulated access pattern and the real one is in the case where the algorithm aborts as a result of an overflow before the last level, which occurs with at most $\e(n,Z)$ probability. 
+
+We next show that the output of the algorithm is a random permutation, conditioned of the access pattern. As we previously described, it is actually enough to condition on the vector of random loads $\vec{K} = (K_0,\ldots,K_{B-1})$. We show that given any such vector, all permutations are possible.  
+
+For a particular load $\vec{k}=(k_0, k_1, \ldots, k_{B-1})$, there are ${n \choose k_0,\ldots,k_{B-1}}$ ways to distribute the elements into the bins while achieving the vector of loads $\vec{k}$. Then, each bin is individually permuted. 
 The total number of possible outputs with that load is then
 \[{n \choose k_0,\ldots,k_{B-1}} \cdot k_0! \cdot \ldots \cdot k_{B-1}! = n!\]
 That is, even if the loads $\vec{k}=(k_0, k_1, \ldots, k_{B-1})$ are revealed, all permutations are still possible.

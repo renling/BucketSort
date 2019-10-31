@@ -5,10 +5,10 @@
 \newcommand{\negl}{{\sf negl}}
 \newcommand{\Y}{{\bf Y}}
 
-\section*{Appendix}
-In the following we formally define the RAM model of computation, and formally prove obliviousness of our algorithms. 
-
-\section{Definitions}
+%\section*{Appendix}
+%In the following we formally define the RAM model of computation, and formally prove obliviousness of our algorithms. 
+%
+\section{Preliminaries}
 \label{sec:defs}
 
 \paragraph{Notations and conventions.}
@@ -22,7 +22,7 @@ A function $\negl$ is called \emph{negligible} if for any constant $c > 0$ and a
 For an ensemble of distributions $\{D_\sec\}$ (parametrized with $\sec$),
 we denote by $x \leftarrow D_\sec$ a sampling of an instance according to the distribution $D_\sec$. 
 Given two ensembles of distributions $\{X_\sec\}$ and $\{Y_\sec\}$, 
-we use the notation $\{X_\sec\} \overset{\e(N)}{\equiv} \{Y_\sec\}$ 
+we use the notation $\{X_\sec\} \overset{\e(\sec)}{\equiv} \{Y_\sec\}$ 
 to say that the two ensembles are statistically indistinguishable if for any unbounded adversary $\A$, 
 $
 \left|\Pr_{x\leftarrow X_\sec}\left[\A(1^\lambda, x)=1\right] - \Pr_{y\leftarrow Y_\sec}\left[\A(1^\lambda, y)=1\right] \right| \leq \e(\sec) \ .
@@ -117,8 +117,7 @@ $
 A RAM is an interactive Turing machine that consists of a memory and a CPU.  The
 memory is denoted as $\mem[\memsize,\blocksize]$, and is indexed by the logical
 address space $[N] = \{1,2,\ldots,N\}$. We refer to each memory word also as a
-\emph{block} and we use $\bsize$ to denote the bit-length of each block. The CPU
-has an internal state that consists of $O(1)$ words. The memory supports read/write
+\emph{block} and we use $\bsize$ to denote the bit-length of each block. The memory supports read/write
 instructions $(\op,\addr, \data)$, where $\op \in \{\Read,\Write\}$, $\addr \in
 [N]$ and $\data \in \bit^\bsize \cup \{\bot\}$.  If $\op = \Read$, then
 $\data=\bot$ and the returned value is the content of the block located in
@@ -135,11 +134,14 @@ store an address).
 \noindent
 {\bf Obliviousness.}
 %\paragraph{Obliviousness.} 
-Our security definition is standard. A functionality $f$ is a (possibly randomized) RAM machine that gets some input $x$ and computes an output $y$. A RAM algorithm $M$ obliviously implements the functionality $f$ if: (1) it has the same input/output behavior as $f$; (2) There exists a simulator $\Sim(\abs{x})$ that produces access pattern that is statistically close to the access pattern of $M(x)$. I.e., it can simulates all memory addresses accessed by $M$ during the execution on $x$, without knowing $x$. In case where the functionality $f$ is randomized, we require that the joint distribution of the output of the functionality and the output of the simulator would be statistically close to the output of the algorithm $M$ and its access pattern. Formally, we let ${\sf AccPtrn}(M(x))$ denote the distribution of memory addresses a machine $M$ produces on an input $x$. We have:
+Our security definition is standard. Intuitively, a RAM program $M$ obliviously simulates a RAM program $f$ other In case where the access pattern and the functionality are randomized, we have to consider the joint distribution of the simulator and the output of the RAM program or the functionality. 
 
-\begin{definition}[Oblivious machines]
-\label{defn:omachine}
-Let $f,M:\bit^* \rightarrow \bit^*$ be (possibly randomized) RAM programs. We say that $M$ {\em obliviously simulates $f$} if there exists a  simulator $\Sim$ and a negligible function $\epsilon(\cdot)$ such that  for any $\lambda$:% and any input $x$ of size $\lambda$ it holds that:
+%In our sorting algorithm, the access pattern is randomized but the functionality is deterministic. In the oblivious random permutation algorithm, the access pattern is deterministic but the functionality is randomized. As always either the access pattern or the functionality is deterministic, we can consider a simpler definition of obliviousness in which the functionality and the simulation are considered separately. 
+
+A functionality $f$ is a (possibly randomized) RAM machine that gets some input $x$ and computes an outputs $y$. For a  RAM machine $M$ and input $x$, let ${\sf AccPtrn}(M(x))$ denote the distribution of memory addresses a machine $M$ produces on an input $x$.
+We have:
+\begin{definition}
+A RAM algorithm $M$ obliviously implements the functionality $f$ with $\e$-obliviousness if the following hold:
 \begin{eqnarray*}
 \hspace{-5ex}\lefteqn{\left\{\Sim(1^\lambda),f(x)\right\}_{x \in \bit^\lambda}} \\
 &&\hspace{+5ex}\overset{\epsilon(\lambda)}{\equiv} \left\{ {\sf AccPtrn}(M(x)),M(x)\right\}_{x \in \bit^\lambda}
@@ -147,166 +149,203 @@ Let $f,M:\bit^* \rightarrow \bit^*$ be (possibly randomized) RAM programs. We sa
 If $\epsilon(\cdot)=0$, we say $M$ is perfectly oblivious. 
 \end{definition}
 
+%$$
+%$$
+%\begin{MyItemize}
+%
+%\item {\bf $\delta$-Correctness:} For every input $x$ it holds that 
+%$$
+%\Pr\left[M(x) = f(x) \right] \geq 1- \delta(\abs{x})
+%$$
+%
+%\item {\bf $\e$-Obliviousness:} There exists a simulator $\Sim(\abs{x})$ such that
+%$$
+%\left\{{\sf AccPtrn}(M(x))\right\}_{\abs{x}} \overset{\e(\abs{x})}{\equiv} 
+%\left\{\Sim(\abs{x})\right\}_{\abs{x}}
+%$$
+%%that produces access pattern that is statistically close to the access pattern of $M(x)$.
+%\end{MyItemize}
+%\end{definition}
+
+%A functionality $f$ is a (possibly randomized) RAM machine that gets some input $x$ and computes an output $y$. A RAM algorithm $M$ obliviously implements the functionality $f$ if: (1) it has the same input/output behavior as $f$; (2) There exists a simulator $\Sim(\abs{x})$ that produces access pattern that is statistically close to the access pattern of $M(x)$. I.e., it can simulates all memory addresses accessed by $M$ during the execution on $x$, without knowing $x$. Note that all our algorithms have deterministic access pattern, and therefore 
+%
+%In case where the functionality $f$ is randomized, we require that the joint distribution of the output of the functionality and the output of the simulator would be statistically close to the output of the algorithm $M$ and its access pattern. Formally, we let ${\sf AccPtrn}(M(x))$ denote the distribution of memory addresses a machine $M$ produces on an input $x$. We have:
+%
+%\begin{definition}[Oblivious machines]
+%\label{defn:omachine}
+%Let $f,M:\bit^* \rightarrow \bit^*$ be (possibly randomized) RAM programs. We say that $M$ {\em obliviously simulates $f$} if there exists a  simulator $\Sim$ and a negligible function $\epsilon(\cdot)$ such that  for any $\lambda$:% and any input $x$ of size $\lambda$ it holds that:
+%\begin{eqnarray*}
+%\hspace{-5ex}\lefteqn{\left\{\Sim(1^\lambda),f(x)\right\}_{x \in \bit^\lambda}} \\
+%&&\hspace{+5ex}\overset{\epsilon(\lambda)}{\equiv} \left\{ {\sf AccPtrn}(M(x)),M(x)\right\}_{x \in \bit^\lambda}
+%\end{eqnarray*}
+%If $\epsilon(\cdot)=0$, we say $M$ is perfectly oblivious. 
+%\end{definition}
+
 The two main functionalities that we focus on in this paper are the following:
-\begin{MyItemize}
-\item {\bf Oblivious sort:} This is a deterministic functionality in which the input is an array $A[1,\ldots,n]$ of memory blocks (i.e., each $A[i] \in \bit^\blocksize$, representing a key). The goal is to output an array $A'[1,\ldots,n]$ which is some permutation $\pi:[n] \rightarrow [n]$ of the array $A$, i.e., $A'[i] = A[\pi(i)]$, such that $A'[1]\leq \ldots \leq A'[n]$. Obliviousness is defined using Definition~\ref{defn:omachine}. We denote this functionality as ${\cal F}_{\rm sort}$. 
 
-\item {\bf Oblivious permutation:} 
-This is a randomized functionality in which the input is an array $A[1,\ldots,n]$ of memory blocks. The functionality chooses a random permutation $\pi:[n] \rightarrow [n]$ and outputs an array $A'[1,\ldots,n]$ such that $A'[i] = A[\pi(i)]$ for every $i$. Obliviousness is defined using Definition~\ref{defn:omachine}. Note that the definition requires that the access pattern does not leak the permutation chosen by the functionality. We denote this functionality ${\cal F}_{\rm perm}$. 
-\end{MyItemize}
+%\begin{MyItemize}
+\smallskip
+\noindent
+{\bf Oblivious sort:} This is a deterministic functionality in which the input is an array $A[1,\ldots,n]$ of memory blocks (i.e., each $A[i] \in \bit^\blocksize$, representing a key). The goal is to output an array $A'[1,\ldots,n]$ which is some permutation $\pi:[n] \rightarrow [n]$ of the array $A$, i.e., $A'[i] = A[\pi(i)]$, such that $A'[1]\leq \ldots \leq A'[n]$. %Obliviousness is defined using Definition~\ref{defn:omachine}. We denote this functionality as ${\cal F}_{\rm sort}$. 
 
-
-\section{Obliviousness}
-\label{appx:formal}
-In this section we provide proofs for obliviousness of our constructions. In Section~\ref{sec:rand:functionality} we formally define the ideal functionality of the random bin assignment (Algorithm~\ref{code:obin}). 
-
-
-\subsection{\boldmath Random Bin Assignment: Functionality}
-\label{sec:rand:functionality}
-We start with defining the oblivious random bin assignment functionality, which we denote by $f_{\rm randbin}$. In a nutshell, given some input array ${\bf X}$ we consider an output array which has twice the size of the input array, and we consider the output array as $B$ consecutive bins. We assign each ``real'' element of the input array into a random bin in the output array, and pad each bin with dummy elements. We will show how to realize the functionality for $Z := \alpha \log \lambda$ with $\alpha \in \omega(1)$ and $\lambda$ is the security parameter. 
+\smallskip
+\noindent
+ {\bf Oblivious permutation:} 
+This is a randomized functionality in which the input is an array $A[1,\ldots,n]$ of memory blocks. The functionality chooses a random permutation $\pi:[n] \rightarrow [n]$ and outputs an array $A'[1,\ldots,n]$ such that $A'[i] = A[\pi(i)]$ for every $i$. %Obliviousness is defined using %Definition~\ref{defn:omachine}. Note that the definition requires that the access pattern does not leak the permutation chosen by the functionality. We denote this functionality ${\cal F}_{\rm perm}$. 
+%\end{MyItemize}
 
 
-\begin{myfunc}
-[\boldmath ${\cal F}_{\rm randbin}(\X,Z)$]
-\label{func:bin-assignment}
-The random bin assignment functionality ${\cal F}_{\rm randbin}(\X,Z)$ is defined as follows:
-\begin{MyItemize}
-\item {\bf Input:} an input an array $\X$ of length $n$ containing real and dummy elements, and a bin size~$Z$. 
-\item {\bf The functionality:} 
-\begin{MyEnumerate}
-\item Define an output array $\Y$ of size $2n$, containing $B = 2n/Z$ bins of size $Z$ each, denoted as $\Y_1,\ldots,\Y_B$. 
-\item For every real element in $\X$ choose a random destination bin $i \gets [B]$, and place the element in the $i$th output bin. 
-\item If some output bin contains more than $Z$ elements, then {\sf abort}. 
-\item Pad each output bin to its maximal capacity using dummy elements. Order each output bin as follows: 
-(1) all real elements appear before dummies;
-and (2) real elements are ordered according to their ordering (indices) in the input array $\X$.
-\end{MyEnumerate}
-\end{MyItemize}
-\end{myfunc}
-
-
-\begin{lemma}
-Let $Z = \alpha \log \lambda$ for any super-constant function $\alpha(\lambda)$.
-Algorithm~\ref{code:obin}
-obliviously simulates ${\cal F}_{\rm randbin}$ (i.e., Functionality~\ref{func:bin-assignment}) with $\epsilon(n, Z) = 2n/Z \cdot \log(2n/Z) \cdot e^{-Z/6}$ failure probability. %The algorithm completes in $O(\frac{n}{Z}\log n \cdot T_{\sf MergeSplit}(Z))$ work, where $T_{\sf MergeSplit}(Z)$ .
-\label{lem:randbin}
-\end{lemma}
-\begin{proof}
-The access pattern of Algorithm~\ref{code:obin} is deterministic and is independent of the input, and therefore it can be simulated easily. Moreover, since it is deterministic, it suffices to consider correctness and access pattern separately, and there is no need to consider the joint distribution. 
-As for correctness, we claim that the algorithm implements Functionality~\ref{func:bin-assignment}. Specifically, the functionality and the algorithm choose the same bin assignment for all elements with the exact same probability. Moreover, for the same bin assignments for all elements, the functionality and the algorithm result in the same output, except for a negligible probability of failure. This occurs when there is some internal overflow in the algorithm in one of the iterations $i \in \{1,\ldots,\log B\}$, which does not occur in the functionality. 
-%As for efficiency, we run ${\sf MergeSplit}$ exactly $B \log B$ times, which results in $O(\frac{n}{Z}\log n \cdot T_{\sf MergeSplit}(Z))$. 
-%	%Sorting each bin results in $B \cdot (Z \log^2 Z) = n \log^2 Z$, which is smaller than $O(n \log n)$. 
-\end{proof}
-%
-%\subsection{Oblivious Sort from Oblivious Random Bin Assignment}
-%\label{sec:obliviousSortFromRandomBinAssignment}
-%
-%We formalize the composition theorem: Given an oblivious random bin assignment, 
-%%\paragraph{Oblivious sort from random bin assignment algorithm  and non-oblivious sort.}
-%Given a random bin assignment algorithm 
-%${\sf ObliviousRandomBin}$ and a non-oblivious
-%comparison-based sorting algorithm ${\sf NonObliviousSort}$ (e.g., Merge-Sort), one can 
-%easily construct
-%an oblivious sorting algorithm as follows. 
-%%
-%\begin{myalgorithm}
-%[${\sf ObliviousSortFromRandomBinAssignment}(\X)$]
-%\label{alg:sort-from-random-bin}
-%\leavevmode
-%\begin{MyEnumerate}%[leftmargin=5mm]
-%\item 
-%Given an input array $\X$, invoke the random bin assignment algorithm to receive $\Y: = {\sf ObliviousRandomBin}(\X)$. Note that in each ``bin'' of $\Y$, the real elements appear before the dummy elements, and are sorted. Moreover, $\abs{\Y}=2\abs{\X}$.  
-%
-%%\item Obliviously sort each bucket $A_0,\ldots,A_{B-1}$ using Bitonic Sort, sorting the real elements according to their keys, and preferring real elements over dummy elements. 
+%\section{Obliviousness}
+%\label{appx:formal}
+%In this section we provide proofs for obliviousness of our constructions. In Section~\ref{sec:rand:functionality} we formally define the ideal functionality of the random bin assignment (Algorithm~\ref{code:obin}). 
 %
 %
-%\item Sort $\Y$ using a (non-oblivious) comparison-based sorting algorithm. 
-%That is, invoke ${\Y'} := {\sf NonObliviousSort}(\Y)$, while preferring real elements over dummy elements. 
-%Formally speaking, a sorting algorithm is comparison-based if the physical access pattern depends only on the relative ranking of elements in the input. 
-%A technical condition we need is that no two elements have the same rank. This can be ensured by resolving any tie consistently by the initial location of the elements in the array $\Y$.
+%\subsection{\boldmath Random Bin Assignment: Functionality}
+%\label{sec:rand:functionality}
+%We start with defining the oblivious random bin assignment functionality, which we denote by $f_{\rm randbin}$. In a nutshell, given some input array ${\bf X}$ we consider an output array which has twice the size of the input array, and we consider the output array as $B$ consecutive bins. We assign each ``real'' element of the input array into a random bin in the output array, and pad each bin with dummy elements. We will show how to realize the functionality for $Z := \alpha \log \lambda$ with $\alpha \in \omega(1)$ and $\lambda$ is the security parameter. 
 %
-%\item Now, all dummy elements appear at the $n$ last locations of $\Y'$. Truncate the last $n$ elements of $\Y'$. 
 %
+%\begin{myfunc}
+%[\boldmath ${\cal F}_{\rm randbin}(\X,Z)$]
+%\label{func:bin-assignment}
+%The random bin assignment functionality ${\cal F}_{\rm randbin}(\X,Z)$ is defined as follows:
+%\begin{MyItemize}
+%\item {\bf Input:} an input an array $\X$ of length $n$ containing real and dummy elements, and a bin size~$Z$. 
+%\item {\bf The functionality:} 
+%\begin{MyEnumerate}
+%\item Define an output array $\Y$ of size $2n$, containing $B = 2n/Z$ bins of size $Z$ each, denoted as $\Y_1,\ldots,\Y_B$. 
+%\item For every real element in $\X$ choose a random destination bin $i \gets [B]$, and place the element in the $i$th output bin. 
+%\item If some output bin contains more than $Z$ elements, then {\sf abort}. 
+%\item Pad each output bin to its maximal capacity using dummy elements. Order each output bin as follows: 
+%(1) all real elements appear before dummies;
+%and (2) real elements are ordered according to their ordering (indices) in the input array $\X$.
 %\end{MyEnumerate}
-%\end{myalgorithm}
+%\end{MyItemize}
+%\end{myfunc}
 %
-%%Let ${\sf Truncate}$ denote the last step of the above algorithm. Then, our sorting algorithm can be described as the following simple composition 
-%%$$ {\sf Truncate}({\sf NonObliviousSort}({\sf ObliviousRandomBin}(\X))) \ .$$
 %
-%\paragraph{Why is it oblivious?} 
-%Given that we do not fully permute the input array, a natural question is why the above composition is still oblivious. Essentially, the composition still holds since there is a 1-to-1 mapping between any input of the array and every possible output of the ${\cal F}_{\rm randbin}$ functionality, i.e., every possible input of the non-oblivious sorting algorithm. This mapping is exactly the random assignment of the destination bins. Therefore,  every access pattern in the non-oblivious sorting part of the algorithm, can be justified with some specific random assignment on the input array, for every possible ordering of the input array. However, some of the  assignments are ``invalid'' due to overflows; yet, overflows occur with negligible probability, and therefore we get statistical security. We proceed to the formal proof of security:
-%
-%\begin{lemma}[From oblivious random bin to oblivious sort]
-%Suppose that {\sf ObliviousRandomBin} is a statistically (or perfectly resp.)
-%oblivious random bin assignment algorithm.
-%Then, 
-%the above algorithm is a statistically (or perfectly resp.) secure 
-%oblivious sorting algorithm. 
-%\label{lem:orpsort}
+%\begin{lemma}
+%Let $Z = \alpha \log \lambda$ for any super-constant function $\alpha(\lambda)$.
+%Algorithm~\ref{code:obin}
+%obliviously simulates ${\cal F}_{\rm randbin}$ (i.e., Functionality~\ref{func:bin-assignment}) with $\epsilon(n, Z) = 2n/Z \cdot \log(2n/Z) \cdot e^{-Z/6}$ failure probability. %The algorithm completes in $O(\frac{n}{Z}\log n \cdot T_{\sf MergeSplit}(Z))$ work, where $T_{\sf MergeSplit}(Z)$ .
+%\label{lem:randbin}
 %\end{lemma}
 %\begin{proof}
-%Since the functionality is deterministic, we can consider obliviousness and correctness separately. Correctness of the algorithm is trivial. 
-%We next prove the obliviousness of the algorithm. 
-%We prove for the case of perfect security, since statistical security is similar,
-%except that we replace ``identically distributed'' with ``statistically close''.
-%
-%
-%Let ${\sf SimRandBin}$ be the simulator algorithm for 
-%the underlying oblivious random bin assignment.
-%Consider any given input $\X$ of length $n$, 
-%and let $(\Y, {\sf addressesRandBin})$ 
-%denote the joint distribution of the outcome array $\Y$ and the addresses
-%accessed during an execution of the oblivious random bin assignment.
-%Lemma~\ref{lem:randbin} implies that:
-%$$
-%\left(\Y, {\sf addressesRandBin}\right) \equiv \left({f}_{\rm randbin}(\X), {\sf SimRandBin}(1^n,|\X|)\right)  \ . \vspace{-1ex}
-%$$
-%Let ${\sf SortAddresses}(\Y)$ 
-%denote the addresses observed during an execution 
-%of the truncation algorithm and the non-oblivious, comparison-based 
-%sorting algorithm upon receiving input array $\Y$.
-%We thus have that\vspace{-1ex}
-%\begin{eqnarray*}
-%\hspace{-15ex}\lefteqn{\left({\sf SortAddresses}(\Y), {\sf addressesRandBin}\right)}\\
-%&& \hspace{+15ex}\equiv 
-%\left({\sf SortAddresses}({f}_{\rm randbin}(\X)), {\sf SimRandBin}(1^n,|\X|)\right) \ .   \vspace{-1ex}
-%\end{eqnarray*}
-%For any comparison-based 
-%sort, its access patterns depend only on 
-%the relative ranking of the input elements. Since without loss of generality, 
-%we assumed that the input array $\X$ always has distinct values, and we carefully defined how to avoid any ties, 
-%we have that\vspace{-1ex}
-%$$
-%{\sf SortAddresses}({f}_{\rm randbin}(\X)) \equiv
-%{\sf SortAddresses}({f}_{\rm randbin}([|\X|])) \ , \vspace{-1ex}
-%$$
-%where $[|\X|] = \{1,\ldots,|\X|\}$. 
-%Now, 
-%observe that we can construct a simulator 
-%${\sf SimObliviousSort}$
-%that simply outputs 
-%$$
-%{\sf SortAddresses}({f}_{\rm randbin}([|\X|])), {\sf SimRandBin}(1^n,|\X|)
-%$$
-%This simulator's output is identically distributed
-%as the real-world access patterns of executing
-%the aforementioned sorting algorithm, i.e., to $({\sf SortAddresses}(\Y), \allowbreak{\sf addressesRandBin})$. 
+%The access pattern of Algorithm~\ref{code:obin} is deterministic and is independent of the input, and therefore it can be simulated easily. Moreover, since it is deterministic, it suffices to consider correctness and access pattern separately, and there is no need to consider the joint distribution. 
+%As for correctness, we claim that the algorithm implements Functionality~\ref{func:bin-assignment}. Specifically, the functionality and the algorithm choose the same bin assignment for all elements with the exact same probability. Moreover, for the same bin assignments for all elements, the functionality and the algorithm result in the same output, except for a negligible probability of failure. This occurs when there is some internal overflow in the algorithm in one of the iterations $i \in \{1,\ldots,\log B\}$, which does not occur in the functionality. 
+%%As for efficiency, we run ${\sf MergeSplit}$ exactly $B \log B$ times, which results in $O(\frac{n}{Z}\log n \cdot T_{\sf MergeSplit}(Z))$. 
+%%	%Sorting each bin results in $B \cdot (Z \log^2 Z) = n \log^2 Z$, which is smaller than $O(n \log n)$. 
 %\end{proof}
-%
-%%We therefore conclude:
-%%\begin{corollary}
-%%\label{cor:rand-bin-using-bitonic}
-%%Let $Z = \alpha \log \lambda$ for any super-constant function $\alpha(\lambda)$, and assume that a client can store $4\cdot Z$ elements locally. 
-%%Algorithm~\ref{alg:bucket-sort}, where ${\sf MergeSplit}$ 
-%%obliviously simulates ${\cal F}_{\rm randbin}$ (i.e., Functionality~\ref{func:bin-assignment}) with $\negl$ statistical 
-%%failure. The algorithm completes in $O(n \log n)$ work.
-%%\end{corollary}
-%
-%%\medskip
-%%\noindent
-%%{\bf Building blocks.} Moreover, in Appendix~\ref{sec:building-blocks} we review some building blocks that we will use in our construction, including oblivious sorts, {\sf Dedup} -- an algorithm that removes duplicates obliviously based on oblivious sorts, and Oblivious Bin Packing -- an algorithm that receives an array as an input, where each element is marked with some destination bin, and the algorithm obliviously routes the elements into the bin, while padding each bin to its maximal capacity with dummy elements. This is again implemented using oblivious sorts. See Appendix~\ref{sec:building-blocks} for further details.   
-%
-%%%% Local Variables:
-%%%% mode: latex
-%%%% TeX-master: "main"
-%%%% End:
+%%
+%%\subsection{Oblivious Sort from Oblivious Random Bin Assignment}
+%%\label{sec:obliviousSortFromRandomBinAssignment}
+%%
+%%We formalize the composition theorem: Given an oblivious random bin assignment, 
+%%%\paragraph{Oblivious sort from random bin assignment algorithm  and non-oblivious sort.}
+%%Given a random bin assignment algorithm 
+%%${\sf ObliviousRandomBin}$ and a non-oblivious
+%%comparison-based sorting algorithm ${\sf NonObliviousSort}$ (e.g., Merge-Sort), one can 
+%%easily construct
+%%an oblivious sorting algorithm as follows. 
+%%%
+%%\begin{myalgorithm}
+%%[${\sf ObliviousSortFromRandomBinAssignment}(\X)$]
+%%\label{alg:sort-from-random-bin}
+%%\leavevmode
+%%\begin{MyEnumerate}%[leftmargin=5mm]
+%%\item 
+%%Given an input array $\X$, invoke the random bin assignment algorithm to receive $\Y: = {\sf ObliviousRandomBin}(\X)$. Note that in each ``bin'' of $\Y$, the real elements appear before the dummy elements, and are sorted. Moreover, $\abs{\Y}=2\abs{\X}$.  
+%%
+%%%\item Obliviously sort each bucket $A_0,\ldots,A_{B-1}$ using Bitonic Sort, sorting the real elements according to their keys, and preferring real elements over dummy elements. 
+%%
+%%
+%%\item Sort $\Y$ using a (non-oblivious) comparison-based sorting algorithm. 
+%%That is, invoke ${\Y'} := {\sf NonObliviousSort}(\Y)$, while preferring real elements over dummy elements. 
+%%Formally speaking, a sorting algorithm is comparison-based if the physical access pattern depends only on the relative ranking of elements in the input. 
+%%A technical condition we need is that no two elements have the same rank. This can be ensured by resolving any tie consistently by the initial location of the elements in the array $\Y$.
+%%
+%%\item Now, all dummy elements appear at the $n$ last locations of $\Y'$. Truncate the last $n$ elements of $\Y'$. 
+%%
+%%\end{MyEnumerate}
+%%\end{myalgorithm}
+%%
+%%%Let ${\sf Truncate}$ denote the last step of the above algorithm. Then, our sorting algorithm can be described as the following simple composition 
+%%%$$ {\sf Truncate}({\sf NonObliviousSort}({\sf ObliviousRandomBin}(\X))) \ .$$
+%%
+%%\paragraph{Why is it oblivious?} 
+%%Given that we do not fully permute the input array, a natural question is why the above composition is still oblivious. Essentially, the composition still holds since there is a 1-to-1 mapping between any input of the array and every possible output of the ${\cal F}_{\rm randbin}$ functionality, i.e., every possible input of the non-oblivious sorting algorithm. This mapping is exactly the random assignment of the destination bins. Therefore,  every access pattern in the non-oblivious sorting part of the algorithm, can be justified with some specific random assignment on the input array, for every possible ordering of the input array. However, some of the  assignments are ``invalid'' due to overflows; yet, overflows occur with negligible probability, and therefore we get statistical security. We proceed to the formal proof of security:
+%%
+%%\begin{lemma}[From oblivious random bin to oblivious sort]
+%%Suppose that {\sf ObliviousRandomBin} is a statistically (or perfectly resp.)
+%%oblivious random bin assignment algorithm.
+%%Then, 
+%%the above algorithm is a statistically (or perfectly resp.) secure 
+%%oblivious sorting algorithm. 
+%%\label{lem:orpsort}
+%%\end{lemma}
+%%\begin{proof}
+%%Since the functionality is deterministic, we can consider obliviousness and correctness separately. Correctness of the algorithm is trivial. 
+%%We next prove the obliviousness of the algorithm. 
+%%We prove for the case of perfect security, since statistical security is similar,
+%%except that we replace ``identically distributed'' with ``statistically close''.
+%%
+%%
+%%Let ${\sf SimRandBin}$ be the simulator algorithm for 
+%%the underlying oblivious random bin assignment.
+%%Consider any given input $\X$ of length $n$, 
+%%and let $(\Y, {\sf addressesRandBin})$ 
+%%denote the joint distribution of the outcome array $\Y$ and the addresses
+%%accessed during an execution of the oblivious random bin assignment.
+%%Lemma~\ref{lem:randbin} implies that:
+%%$$
+%%\left(\Y, {\sf addressesRandBin}\right) \equiv \left({f}_{\rm randbin}(\X), {\sf SimRandBin}(1^n,|\X|)\right)  \ . \vspace{-1ex}
+%%$$
+%%Let ${\sf SortAddresses}(\Y)$ 
+%%denote the addresses observed during an execution 
+%%of the truncation algorithm and the non-oblivious, comparison-based 
+%%sorting algorithm upon receiving input array $\Y$.
+%%We thus have that\vspace{-1ex}
+%%\begin{eqnarray*}
+%%\hspace{-15ex}\lefteqn{\left({\sf SortAddresses}(\Y), {\sf addressesRandBin}\right)}\\
+%%&& \hspace{+15ex}\equiv 
+%%\left({\sf SortAddresses}({f}_{\rm randbin}(\X)), {\sf SimRandBin}(1^n,|\X|)\right) \ .   \vspace{-1ex}
+%%\end{eqnarray*}
+%%For any comparison-based 
+%%sort, its access patterns depend only on 
+%%the relative ranking of the input elements. Since without loss of generality, 
+%%we assumed that the input array $\X$ always has distinct values, and we carefully defined how to avoid any ties, 
+%%we have that\vspace{-1ex}
+%%$$
+%%{\sf SortAddresses}({f}_{\rm randbin}(\X)) \equiv
+%%{\sf SortAddresses}({f}_{\rm randbin}([|\X|])) \ , \vspace{-1ex}
+%%$$
+%%where $[|\X|] = \{1,\ldots,|\X|\}$. 
+%%Now, 
+%%observe that we can construct a simulator 
+%%${\sf SimObliviousSort}$
+%%that simply outputs 
+%%$$
+%%{\sf SortAddresses}({f}_{\rm randbin}([|\X|])), {\sf SimRandBin}(1^n,|\X|)
+%%$$
+%%This simulator's output is identically distributed
+%%as the real-world access patterns of executing
+%%the aforementioned sorting algorithm, i.e., to $({\sf SortAddresses}(\Y), \allowbreak{\sf addressesRandBin})$. 
+%%\end{proof}
+%%
+%%%We therefore conclude:
+%%%\begin{corollary}
+%%%\label{cor:rand-bin-using-bitonic}
+%%%Let $Z = \alpha \log \lambda$ for any super-constant function $\alpha(\lambda)$, and assume that a client can store $4\cdot Z$ elements locally. 
+%%%Algorithm~\ref{alg:bucket-sort}, where ${\sf MergeSplit}$ 
+%%%obliviously simulates ${\cal F}_{\rm randbin}$ (i.e., Functionality~\ref{func:bin-assignment}) with $\negl$ statistical 
+%%%failure. The algorithm completes in $O(n \log n)$ work.
+%%%\end{corollary}
+%%
+%%%\medskip
+%%%\noindent
+%%%{\bf Building blocks.} Moreover, in Appendix~\ref{sec:building-blocks} we review some building blocks that we will use in our construction, including oblivious sorts, {\sf Dedup} -- an algorithm that removes duplicates obliviously based on oblivious sorts, and Oblivious Bin Packing -- an algorithm that receives an array as an input, where each element is marked with some destination bin, and the algorithm obliviously routes the elements into the bin, while padding each bin to its maximal capacity with dummy elements. This is again implemented using oblivious sorts. See Appendix~\ref{sec:building-blocks} for further details.   
+%%
+%%%%% Local Variables:
+%%%%% mode: latex
+%%%%% TeX-master: "main"
+%%%%% End:
