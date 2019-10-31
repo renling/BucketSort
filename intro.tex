@@ -52,7 +52,6 @@ At level $i$, every $2^{i}$ consecutive buckets are semi-sorted by the most sign
 
 %\begin{table*}[t]
 \bigskip
-\bigskip
 \centering
 \begin{tabular}{|c|c|c|c|c|}
     \hline
@@ -94,13 +93,11 @@ Our bucket oblivious sort and bucket ORP algorithms are derived from
 this oblivious random bin assignment building block. 
 
 \paragraph{From oblivious bin assignment to ORP and oblivious sort.}
-To obtain a random permutation, 
-a simple approach is to remove the dummy elements and randomly permute 
-within each bucket of the final layer.
-Since the client can hold $Z$ elements, permuting each bucket
-obliviously can be done locally. 
-Once we have ORP, we can first perform ORP on the input array then apply any non-oblivious
-{\it comparison-based} sorting algorithm (e.g., quick sort or
+To obtain a random permutation, we simply remove all dummy elements and randomly permute 
+each bucket of the final layer.
+Since the client can hold $Z$ elements, permuting each bucket can be done locally. 
+We show that the algorithm is oblivious and gives a random permutation despite revealing the number of dummy elements in each destination bucket.
+To get oblivious sort, we can first perform ORP on the input array then apply any \emph{non-oblivious, comparison-based} sorting algorithm (e.g., quick sort or
 merge sort). We show that the composition of ORP and non-oblivious sort results in an oblivious sort. 
 
 \paragraph{Dealing with small client storage.}
