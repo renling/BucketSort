@@ -82,17 +82,17 @@ the simulator chooses random loads $\vec{k}=(k_0, k_1, \ldots, k_{B-1})$, where 
 
 Clearly, $\vec{k}$ are distributed the same as in the real execution. The only difference between the simulated access pattern and the real one is in the case where the algorithm aborts as a result of an overflow before the last level, which occurs with at most $\e(n,Z)$ probability. 
 
-We next show that the output of the algorithm is a random permutation, conditioned of the access pattern. As we previously described, it is actually enough to condition on the vector of random loads $\vec{k}=(k_0, k_1, \ldots, k_{B-1})$. We show that given any such vector, all permutations are possible.  
+We next show that the output of the algorithm is a random permutation, conditioned on the access pattern. As we previously described, it is actually enough to condition on the vector of random loads $\vec{k}=(k_0, k_1, \ldots, k_{B-1})$. We show that given any such vector, all permutations are equally likely.  
 
 Fix a particular load $\vec{k}=(k_0, k_1, \ldots, k_{B-1})$. The algorithm works by first assigning the real elements into the bins, and then permuting within each bin. For every input, there are exactly ${n \choose k_0,\ldots,k_{B-1}}$ ways to distribute the real elements into the bins while achieving the vector of loads $\vec{k}$. Then, each bin is individually permuted, i.e., within each bin $i$, we have $k_i$ different possible ordering. Overall, 
 the total number of possible outputs with that load is then
 \[{n \choose k_0,\ldots,k_{B-1}} \cdot k_0! \cdot \ldots \cdot k_{B-1}! = n!\]
-That is, even conditioned on some specific loads $\vec{k}=(k_0, k_1, \ldots, k_{B-1})$, all permutations are still possible.
-Therefore, for every $\pi$, $\Pr\left[\Pi = \pi \mid \vec{K}=\vec{k} \right] = \frac 1 {n!}$, and
+That is, even conditioned on some specific loads $\vec{k}=(k_0, k_1, \ldots, k_{B-1})$, all permutations are still equally likely.
+Therefore, $\forall \pi$, $\Pr\left[\Pi = \pi \mid \vec{K}=\vec{k} \right] = \frac 1 {n!}$, and
 \[ \Pr\left[\Pi = \pi\right] = \sum_{\vec{k}} \Pr\left[\Pi = \pi \mid \vec{K}=\vec{k} \right] \cdot \Pr\left[\vec{K}=\vec{k}\right] = \frac {1}{n!} \]
 %&= \frac {1}{n!} \cdot \sum_{\vec{k}} \Pr\left[\vec{K}=\vec{k}\right] = \frac {1}{n!}
 
-The ORP fails only when some bin overflows during the oblivious random bin assignment, which happens with $\epsilon(n,Z)$ probability by Lemma~\ref{lemma:shuffle}.
+Our algorithm fails to implement the ORP only when some bin overflows during the oblivious random bin assignment, which happens with $\epsilon(n,Z)$ probability by Lemma~\ref{lemma:shuffle}.
 \end{proof}
 
 \subsection{Bucket Oblivious Sort.}
