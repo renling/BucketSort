@@ -19,8 +19,8 @@ We first present the oblivious random bin assignment algorithm (Section~\ref{sec
 The input to the oblivious random bin assignment algorithm is an array $\X$ of $n$ elements. 
 The goal is to obliviously and uniformly randomly distribute the elements into a set of bins. Each element is assigned to independent random bin, and elements are then routed into the bins obliviously. 
 
-The algorithm first chooses a bucket size $Z$, 
-and constructs $B=\lceil 2n/Z \rceil$ buckets each of size $Z$.
+The algorithm first chooses a bucket size $Z$, which can be set to the security parameter $\sec$. 
+Then, it constructs $B=\lceil 2n/Z \rceil$ buckets each of size $Z$.
 Without loss of generality, assume $B$ is a power of $2$ --- if not, pad it to the next power of 2. Note that the algorithm introduces $n$ dummy elements, and the output is twice the size of the input array. %If needed, see Appendix~\ref{appx:formal} for a formal definition of the functionality. 
 
 %also assume elements in $\X$ are distinct --- if not, we can use the indices of the elements within $\X$ to break ties.
