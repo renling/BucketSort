@@ -7,7 +7,7 @@
 \label{sec:construction}
 \label{sec:random-bin-assignment}
 
-We first present the oblivious random bin assignment algorithm (Section~\ref{sec:obin})  and then use it to implement our Bucket Oblivious Random Permutation (Section~\ref{sec:ORP}) and our Bucket Oblivious Sort (Section~\ref{sec:osort}).
+We first present the oblivious random bin assignment algorithm (Section~\ref{sec:obin})  and then use it to implement our bucket oblivious random permutation (Section~\ref{sec:ORP}) and bucket oblivious sort (Section~\ref{sec:osort}).
 
 \newcommand{\val}{{\sf value}}
 \newcommand{\pref}{{\sf pref}}
@@ -124,8 +124,8 @@ For our algorithms, assuming the client can store $2Z$ elements locally, each $2
 So oblivious bin assignment and bucket ORP run in (less than) $4n\log n$ time.
 Note that the last step of ORP, i.e., permuting each output bucket, can be incorporated with the last level of oblivious bin assignment.
 Bucket oblivious sort additionally invokes a non-oblivious sort, and thus runs in $6n\log n$ time. 
-This is within $3\times$ of Merge sort and beats Bitonic sort when $n$ is moderately large;
-for example, $5\times$ faster than Bitonic for $n=2^{30}$.
+This is within $3\times$ of merge sort and beats bitonic sort when $n$ is moderately large;
+for example, $5\times$ faster than bitonic for $n=2^{30}$.
 For an overflow probability of $2^{-80}$ and most reasonable values of $n$, $Z = 512$ suffices. 
 
 
