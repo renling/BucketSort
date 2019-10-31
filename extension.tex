@@ -8,7 +8,7 @@
 We now discuss how to extend our algorithms to the case where the client can only store $O(1)$ elements locally.
 
 Each \textsc{MergeSplit} can be realized with a single invocation of bitonic sort.
-Concretely, we first scan the two input buckets to count how many real elements should go to $A'_0$ vs. $A'_1$, then tag the right number of dummy elements to go to either direction, and finally perform the bitonic sort.
+Concretely, we first scan the two input buckets to count how many real elements should go to buckets $A'_0$ vs. $A'_1$, then tag the correct number of dummy elements going to either buckets, and finally perform a bitonic sort.
 
 Next, we need to permute each output bucket obliviously with $O(1)$ local storage. 
 This can be done as follows. 
@@ -36,7 +36,7 @@ Setting $Z=\omega(1)\log n$, bucket oblivious sort achieves $O(n\log n)$ runtime
 Algorithmic performance when the data is stored on disk has been studied in the external disk model (e.g.,~\cite{RuemmlerW94,ArgeFGV97,Vitter01,Vitter06}) and references within). Recently, Asharov et al.~\cite{AsharovCNPRS19} extended this study to oblivious algorithms. In this setting, an algorithm 
 is said to have $(p, \ell)$ locality if it has access 
 to $p$ disks and 
-accesses in total $\ell$ discontiguous memory regions in all disks combined. As an example, it is not hard to see that merge sort is non-oblivious sorting algorithm that sorts an array of size $n$ in $O(n \log n)$ and $(3,\log n)$-locality, whereas quick sort  is not local for any reasonable $p$. 
+accesses in total $\ell$ discontiguous memory regions in all disks combined. As an example, it is not hard to see that merge sort is a non-oblivious sorting algorithm that sorts an array of size $n$ in $O(n \log n)$ and $(3,\log n)$-locality, whereas quick sort  is not local for any reasonable $p$. 
 This locality metric is motivated by the fact that real-world storage
 media such as disks support sequential accesses
 much faster than random seeks. Thus an algorithm that 
@@ -82,3 +82,8 @@ There exists a statistically oblivious sort algorithm which, except with $\appro
 %{\bf Disclaimer.}
 %This paper was prepared for information purposes jointly with the AI Research Group of JPMorgan Chase \& Co and its affiliates (“J.P.~Morgan”), and is not a product of the Research Department of J.P.~Morgan. J.P.~Morgan makes no explicit or implied representation and warranty and accepts no liability, for the completeness, accuracy or reliability of information, or the legal, compliance, financial, tax or accounting effects of matters contained herein. This document is not intended as investment research or investment advice, or a recommendation, offer or solicitation for the purchase or sale of any security, financial instrument, financial product or service, or to be used in any way for evaluating the merits of participating in any transaction.
 %}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End:
