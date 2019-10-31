@@ -1,3 +1,5 @@
+% !TEX root =  main.tex
+
 \section{Locality of Bucket Oblivious Sort}
 \label{sec:locality}
 
@@ -19,10 +21,10 @@ The work of~\cite{AsharovCNPRS19} initiate a study on locality in oblivious algo
 Towards understanding the notion of locality, it might be convenient to view the memory as a rotational hard drive. The program can submit two types of commands to the memory: (1) read the next contiguous address; (2) jump to a new address (``seek'' in the systems literature). While both types of operations contribute to the bandwidth measure, only the latter one contributes to the locality measure. The work of~\cite{AsharovCNPRS19} also deals with memory that contain more than one disk. This allows some additional flexibility, and distinguishing between different degrees of locality: while a program that just perform random seeks is definitely not local, a program that consists of iterating in parallel on two arrays is local. Having two disks allows running on these two arrays in parallel without introducing any ``jumps''. 
 
 More formally, a memory is denoted as $\mem[N,b, D]$, consisting of $D$ disks, indexed by the address space $[N]= \{1,2,\ldots,N\}$, where $D \cdot N$ is the size of the logical memory. We refer to each memory word also as block and we use $b$ to denote the bit-length of each block. The memory supports the following two types of instructions.
-\begin{MyItemize}
+\begin{itemize}
 \item {\bf Move head operation $({\sf move},{\sf d},{\sf addr})$} moves the head of the ${\sf d}$-disk (${\sf d} \in [{\sf D}]$) to point to address ${\sf addr}$ within that disk.
 \item {\bf A read/write operation $({\sf op},{\sf d},{\sf data})$}, where ${\sf op} \in \{\Read,\Write\}$, ${\sf d} \in [{\sf D}]$ and ${\sf data} \in \bit^{b} \cup \{\bot\}$. If ${\sf op} = \Read$ then ${\sf data}$ and $\mem$ should return the content of the block pointed to by the ${\sf d}$-disk; If ${\sf op} = \Write$ then the block pointed to the ${\sf d}$-th disk is updated to {\sf data}. The ${\sf d}$-th head is then incremented to point to the next consecutive address, and wrapped around when the end of the disk is reached. 
-\end{MyItemize}
+\end{itemize}
 
 \paragraph{Locality.}
 A sequence of operations has $({\sf D},\ell)$-locality if it contains $\ell$ {\sf move} operations to a memory equipped with {\sf D} disks. 

@@ -8,16 +8,58 @@
 \usepackage{graphicx}
 \usepackage{algpseudocode}
 \usepackage{capt-of}
-
+%\usepackage{ntheorem}
 % for appendix
 \usepackage{xspace}
 \usepackage{mathtools}
 \DeclarePairedDelimiter{\abs}{\lvert}{\rvert}
 \newtheorem{definition}{Definition}
 \newtheorem{claim}{Claim}
+\newtheorem{myfunc}{{Functionality}}
+\newtheorem{myalgorithm}{{Algorithm}}
 \renewcommand{\paragraph}[1]{\medskip\noindent\textbf{#1}}
 
 \newcommand{\X}{\mathbf{X}}
+\renewcommand{\sec}{{\lambda}}
+\newcommand{\e}{{\epsilon}}
+\newcommand{\A}{{\cal A}}
+\newcommand{\bsize}{\ensuremath{b}}
+\newcommand{\op}{\ensuremath{\mathsf{op}}\xspace}
+\newcommand{\data}{{\ensuremath{\mathsf{data}}}\xspace}
+\newcommand{\addr}{{\ensuremath{\mathsf{addr}}}\xspace}
+\newcommand{\bit}{{\{0,1\}}}
+\newcommand{\Sim}{\ensuremath{{\sf Sim}}\xspace}
+
+
+\newenvironment{MyItemize}[1]{\begin{itemize}\setlength{\itemsep}{0.1cm}
+\setlength{\parskip}{-0.05cm} 
+\setlength{\leftmargin}{5mm}
+#1}{\end{itemize}}
+
+
+
+
+\newenvironment{MyEnumerate}[1]{
+\begin{enumerate}
+\setlength{\itemsep}{0.1cm}
+\setlength{\parskip}{-0.05cm} 
+\setlength{\leftmargin}{5mm}
+#1}{\end{enumerate}}
+
+\usepackage{color,xcolor}
+
+\ifpdf
+\usepackage[bookmarks=true,pdfstartview=FitH,colorlinks,linkcolor=black,filecolor=black,citecolor=black,urlcolor=black]{hyperref}
+
+\else
+
+\usepackage[dvipdfm,bookmarks=true,pdfstartview=FitH,colorlinks,linkcolor=black,filecolor=black,citecolor=black,urlcolor=black]{hyperref}
+
+\fi
+
+
+\input{macro}
+
 
 \sloppy
 \widowpenalty10000
@@ -25,7 +67,7 @@
 
 \begin{document}
 
-\title{Bucket Oblivious Sort: An Extremely Simple Oblivious Sort}
+\title{\bf Bucket Oblivious Sort: \\An Extremely Simple Oblivious Sort}
 
 \author{Gilad Asharov \thanks{Bar-Ilan University. Part of the work was done while the author was a post-doctoral fellow at Cornell Tech supported a Junior Fellow award from the Simons Foundation, and while at J.P. Morgan AI Research.} \quad
 T-H. Hubert Chan\thanks{The University of Hong Kong. Partially supported the Hong Kong RGC under the grant 17200418.} \quad
@@ -56,8 +98,7 @@ Unauthorized reproduction of this article is prohibited}}
 
 
 \appendix
-\input{macro}
 \input{defn}
-\input{locality}
+%\input{locality}
 
 \end{document}

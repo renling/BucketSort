@@ -32,15 +32,53 @@ Using the $O(1)$-client-storage and $O(n)$-time oblivious tight compaction const
 Setting $Z=\omega(1)\log n$, bucket oblivious sort achieves $O(n\log n)$ runtime, $O(1)$ client storage, and a negligible in $n$ error probability.
 
 \subsection{Locality.}
-We observe that our algorithms, when implemented properly, have good data locality.
-The crux is to perform all $n/Z$ instances of 
-$\textsc{MergeSplit}$ in the same level of the butterfly network concurrently.
-We discuss this part in detail in Appendix~\ref{sec:locality}. 
+\subsection{Locality}
+Algorithmic performance when the data is stored on disk has been studied in the external disk model (e.g.,~\cite{RuemmlerW94,ArgeFGV97,Vitter01,Vitter06}) and references within). Recently, Asharov et al.~\cite{AsharovCNPRS19} extended this study to oblivious algorithms. In this setting, an algorithm 
+is said to have $(p, \ell)$ locality if it has access 
+to $p$ disks and 
+accesses in total $\ell$ discontiguous memory regions in all disks combined. As an example, it is not hard to see that merge sort is non-oblivious sorting algorithm that sorts an array of size $n$ in $O(n \log n)$ and $(3,\log n)$-locality, whereas quick sort  is not local for any reasonable $p$. 
+This locality metric is motivated by the fact that real-world storage
+media such as disks support sequential accesses
+much faster than random seeks. Thus an algorithm that 
+makes mostly sequential accesses would execute much faster in practice than one that  
+makes mostly random accesses --- even if the two have the same runtime in a standard
+word-RAM model. 
+
+Guided by this new metric, Asharov et al.~\cite{AsharovCNPRS19} consider how to design oblivious algorithms and ORAM schemes that achieve good locality. 
+Since sorting is one of the most important
+building blocks in the 
+design of oblivious algorithms, 
+inevitably Asharov et al.~\cite{AsharovCNPRS19}
+show a locality-friendly sorting algorithm.
+Concretely, they show that there is a specific way to implement
+the Bitonic sort meta-algorithm,
+such that the entire algorithm requires accessing 
+$O(\log^2 n)$ distinct memory regions (i.e., as many as the depth of the sorting network) 
+require only 2 disks to be available --- in other words,
+the algorithm achieves $(2, O(\log^2 n))$-locality.
+
+We observe that our algorithm, when implemented properly, is a locality-friendly oblivious sorting algorithm. 
+Our algorithm 
+outperforms Asharov et al.~\cite{AsharovCNPRS19}'s  scheme 
+by an almost logarithmic 
+factor improvement in locality. % both runtime and locality.
+To achieve this, the crux is to implement all $n/Z$ instances of 
+$\textsc{MergeSplit}$ in the same layer of the butterfly network 
+while accessing a small number of discontiguous regions. Specifically, the $\textsc{MergeSplit}$ operation works on 4 buckets at a time, while reading two buckets from the input layer, and writing to two consecutive buckets in the output layer. Moreover, the different invocations of $\textsc{MergeSplit}$ on the same layer deal with consecutive buckets. By carefully distributing the buckets among the different disks, and by using Bitonic sort while implementing the $\textsc{MergeSplit}$ operation, we conclude:
+
+\begin{corollary}
+There exists a statistically oblivious sort algorithm which, except with $\approx e^{-Z/6}$ probability, completes in $O(n \log n \log^2 Z)$ work and with $(3, O(\log n \log^2 Z)$) locality.
+\end{corollary}
+%
+%We observe that our algorithms, when implemented properly, have good data locality.
+%The crux is to perform all $n/Z$ instances of 
+%$\textsc{MergeSplit}$ in the same level of the butterfly network concurrently.
+%We discuss this part in detail in Appendix~\ref{sec:locality}. 
 
 
-\medskip
-{\small
-\noindent
-{\bf Disclaimer.}
-This paper was prepared for information purposes jointly with the AI Research Group of JPMorgan Chase \& Co and its affiliates (“J.P.~Morgan”), and is not a product of the Research Department of J.P.~Morgan. J.P.~Morgan makes no explicit or implied representation and warranty and accepts no liability, for the completeness, accuracy or reliability of information, or the legal, compliance, financial, tax or accounting effects of matters contained herein. This document is not intended as investment research or investment advice, or a recommendation, offer or solicitation for the purchase or sale of any security, financial instrument, financial product or service, or to be used in any way for evaluating the merits of participating in any transaction.
-}
+%\medskip
+%{\small
+%\noindent
+%{\bf Disclaimer.}
+%This paper was prepared for information purposes jointly with the AI Research Group of JPMorgan Chase \& Co and its affiliates (“J.P.~Morgan”), and is not a product of the Research Department of J.P.~Morgan. J.P.~Morgan makes no explicit or implied representation and warranty and accepts no liability, for the completeness, accuracy or reliability of information, or the legal, compliance, financial, tax or accounting effects of matters contained herein. This document is not intended as investment research or investment advice, or a recommendation, offer or solicitation for the purchase or sale of any security, financial instrument, financial product or service, or to be used in any way for evaluating the merits of participating in any transaction.
+%}

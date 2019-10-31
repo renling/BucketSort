@@ -4,9 +4,10 @@
 
 
 \section{Our Construction} 
+\label{sec:construction}
 \label{sec:random-bin-assignment}
 
-We first present the oblivious random bin assignment algorithm (Section~\ref{sec:obin})  and then use it to implement oblivious sort and ORP (Section~\ref{sec:osort}).
+We first present the oblivious random bin assignment algorithm (Section~\ref{sec:obin})  and then use it to implement our Bucket Oblivious Random Permutation (Section~\ref{sec:ORP}) and our Bucket Oblivious Sort (Section~\ref{sec:osort}).
 
 \newcommand{\val}{{\sf value}}
 \newcommand{\pref}{{\sf pref}}
@@ -16,11 +17,11 @@ We first present the oblivious random bin assignment algorithm (Section~\ref{sec
 \label{sec:obin}
 
 The input to the oblivious random bin assignment algorithm is an array $\X$ of $n$ elements. 
-The goal is to obliviously and uniformly randomly distribute the elements into a set of bins. 
+The goal is to obliviously and uniformly randomly distribute the elements into a set of bins. Each element is assigned to independent random bin, and elements are then routed into the bins obliviously. 
 
 The algorithm first chooses a bucket size $Z$, 
 and constructs $B=\lceil 2n/Z \rceil$ buckets each of size $Z$.
-Without loss of generality, assume $B$ is a power of $2$ --- if not, pad it to the next power of 2.
+Without loss of generality, assume $B$ is a power of $2$ --- if not, pad it to the next power of 2. Note that the algorithm introduces $n$ dummy elements, and the output is twice the size of the input array. If needed, see Appendix~\ref{appx:formal} for a formal definition of the functionality. 
 
 %also assume elements in $\X$ are distinct --- if not, we can use the indices of the elements within $\X$ to break ties.
 
@@ -38,7 +39,7 @@ It is then easy to see that Algorithm~\ref{code:obin} is oblivious since the ord
 
 When no bucket overflows, all real elements are correctly put into their assigned bins.
 We now show that the probability of overflow is exponentially small in $Z$. 
-Intuitively, this is because each bucket contains half dummy elements that serve as a form of ``slack'' to disallow overflow.
+Intuitively, this is because each bucket contains (in expectation) half dummy elements that serve as a form of ``slack'' to disallow overflow.
 
 \begin{lemma}
 \label{lemma:shuffle}
@@ -58,11 +59,12 @@ Hence, a union bound over all levels and all buckets
 shows that overflow happens with less than $B \cdot \log B \cdot e^{-Z/6} = \epsilon(n,Z)$ probability.
 \end{proof}
 
+In Appendix~\ref{appx:formal} we formally describe the ideal functionality of oblivious random bin assignment, and show that the above describe algorithm obliviously implements this functionality. 
 
-\subsection{Oblivious Random Permutation (ORP) and Oblivious Sort.}
-\label{sec:osort}
+\subsection{Bucket Oblivious Random Permutation.}
+\label{sec:ORP}
 
-After performing the oblivious random bin assignement, ORP can be simply achieved as follows:
+After performing the oblivious random bin assignment, ORP can be simply achieved as follows:
 delete dummy elements from each bin, locally permute each bin, and finally concatenate the bins.
 
 The ORP reveals the loads of the output buckets of bin assignment,
@@ -89,8 +91,10 @@ Therefore, for every $\pi$, $\Pr\left[\Pi = \pi \mid \vec{K}=\vec{k} \right] = \
 The ORP fails only when some bin overflows during the oblivious random bin assignment, which happens with $\epsilon(n,Z)$ probability.
 \end{proof}
 
+\subsection{Bucket Oblivious Sort.}
+\label{sec:osort}
 Once we have ORP, it is easy to achieve oblivious sort: just invoke any non-oblivious comparison-based sort after ORP.
-The access patterns of a comparison-based sort depend only on the relative ranking of the input elements, which is independent of the input array once the array has been randomly permuted.
+The access patterns of a comparison-based sort depend only on the relative ranking of the input elements, which is independent of the input array once the array has been randomly permuted. 
 
 \subsection{Efficiency.}
 \label{sec:efficiency}

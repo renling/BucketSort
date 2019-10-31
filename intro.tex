@@ -34,7 +34,7 @@ It then follows that while $O(n \log n)$ algorithms exist in theory, practical i
 There exist algorithms such as the Melbourne
 Shuffle~\cite{ohrimenko2014melbourne} that do not rely on
 oblivious sort; but they require $O(\sqrt{n})$ client storage to permute $n$ elements.
-%Other approaches include the famous Thorp shuffle~\cite{thorp01} and random permutation networks~\cite{randpermnet}, but none of these solutions are competitive in performance either asymptotically or concretely.
+Other approaches include the famous Thorp shuffle~\cite{thorp01} and random permutation networks~\cite{randpermnet}, but none of these solutions are competitive in performance either asymptotically or concretely.
 
 \subsection{Our Results.}
 Let $Z$ be a statistical security parameter that controls the error probability. 
@@ -44,7 +44,7 @@ Therefore, we recommend bucket oblivious sort and ORP as attractive alternatives
 
 \begin{figure*}[h!]
 \centering
-\includegraphics[width=0.9\textwidth]{RadixBucketSort1.pdf}
+\includegraphics[width=0.7\textwidth]{RadixBucketSort1.pdf}
 \captionof{figure}{\textbf{Oblivious random bin assignment with 8 buckets.}
 The \textsc{MergeSplit} procedure takes elements from two buckets at level $i$ and put them into two buckets at level $i+1$, according to the $(i+1)$-th most significant bit of the keys. 
 At level $i$, every $2^{i}$ consecutive buckets are semi-sorted by the most significant $i$ bits of the keys.}
@@ -88,18 +88,53 @@ The elements are then routed through the butterfly network to their respective d
 Assuming the client can store two buckets locally at a time, at level $i$, the client simply reads elements from two buckets that are distance $2^i$ away in level $i$ and writes them to two adjacent buckets in level $i+1$, using the $i$-th bit of each element's key to make the routing decision. 
 We refer readers to Figure~\ref{fig:radix-sort} for a graphical illustration.
 
-The above algorithm is clearly oblivious.
-If no bucket overflows, all elements reach their assigned destinations. 
-By setting $Z$ appropriately, we can bound the overflow probability.
+The above algorithm is clearly oblivious, as the order in which the client reads and writes the buckets is fixed and independent of the input array. If no bucket overflows, all elements reach their assigned destinations. By setting $Z$ appropriately, we can bound the overflow probability.
 
-Our bucket oblivious sort and bucket ORP build on top of the above oblivious random bin assignment. 
-To get ORP, simply remove all dummy elements, randomly permute each bucket of the final level, and concatenate the bins.
-To sort, we can simply apply any non-oblivious comparison-based sort (e.g., merge sort) on the randomly permuted elements. 
+Our Bucket Oblivious Sort and Bucket ORP algorithms are derived from
+this oblivious random bin assignment building block. 
 
-In Section~\ref{sec:O1client}, we will discuss how to extend our algorithms to support constant client storage
-We can rely on Bitonic sort to realize the ${\bf MergeSplit}$ operation, which would result in $\approx 2n\log n \log^2 Z$ runtime.
-Recently, Asharov et al.~\cite{AsharovCNPRS19} initiate the study of data locality on oblivious algorithms. 
-We observe that our algorithms are be made locality-friendly, and refer readers to Appendix~\ref{sec:locality} for the exact definitions and complexity measures.
+\paragraph{From oblivious bin assignment to ORP.}
+To obtain a random permutation, 
+a simple approach is to remove the dummy elements and randomly permute 
+within each bucket of the final layer.
+Since the client can hold $Z$ elements, permuting each bucket
+obliviously can be done locally. 
+
+\paragraph{From oblivious bin assignment to oblivious sort.}
+In order to perform an oblivious sort, we can simply use the oblivious bin assignment algorithm and then  
+apply any non-oblivious,
+{\it comparison-based} sorting algorithm (e.g., Quick Sort or
+Merge Sort). We can then remove the dummy elements from the
+resulting list. We show that the composition of our oblivious bin assignment with non-oblivious sort results in an oblivious sort. 
+
+\paragraph{Dealing with small client storage.}
+In Section~\ref{sec:O1client}, we extend the above algorithm
+to support $O(1)$ client storage. 
+We can rely on 
+Bitonic sort to realize the ${\bf MergeSplit}$ operation that operates on 4 buckets at a time,
+which would result in $O(n\log n\cdot \log^2 Z)$
+runtime. % but has good concrete performance. 
+
+\paragraph{Locality.} Algorithmic performance when the data is stored on disk has been studied in the external disk model (e.g.,~\cite{RuemmlerW94,ArgeFGV97,Vitter01,Vitter06}) and references within). Recently, Asharov et al.~\cite{AsharovCNPRS19} extended this study to oblivious algorithms.  We observe that our algorithm is locality-friendly, and refer the reader to Section~\ref{sec:extensions} for the exact definitions and the complexity measure.
+
+
+\paragraph{Organization.}
+The rest of the paper is organized as follows. Our algorithms are simple and intuitive, one can easily inspect obliviousness from the description of our algorithms. Those, in the main body of this paper we focus on the description of the algorithms themselves. Nevertheless, in the appendix we give a more formal treatment in the appendix. In Section~\ref{sec:construction} we give our construction and in Section~\ref{sec:extensions} we describe simple extensions. In Appendix~\ref{sec:defs} we formally define the RAM model of computation and obliviousness. In Appendix~\ref{appx:formal} we give all omitted proofs. 
+
+%
+%
+%\paragraph{From oblivious bin assignment to ORP.}
+%To obtain a random permutation, a simple approach is to remove the dummy elements and permute within each bucket of the final layer. Since the client can hold $Z$ elements, permuting each bucket obliviously can be done locally. 
+%
+%
+%Our bucket oblivious sort and bucket ORP build on top of the above oblivious random bin assignment. 
+%To get ORP, simply remove all dummy elements, randomly permute each bucket of the final level, and concatenate the bins.
+%To sort, we can simply apply any non-oblivious comparison-based sort (e.g., merge sort) on the randomly permuted elements. 
+%
+%In Section~\ref{sec:O1client}, we will discuss how to extend our algorithms to support constant client storage
+%We can rely on Bitonic sort to realize the ${\bf MergeSplit}$ operation, which would result in $\approx 2n\log n \log^2 Z$ runtime.
+%Recently, Asharov et al.~\cite{AsharovCNPRS19} initiate the study of data locality on oblivious algorithms. 
+%We observe that our algorithms are be made locality-friendly, and refer readers to Appendix~\ref{sec:locality} for the exact definitions and complexity measures.
 
 %%% Local Variables:
 %%% mode: latex
