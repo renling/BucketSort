@@ -99,7 +99,7 @@ The ORP fails only when some bin overflows during the oblivious random bin assig
 \label{sec:osort}
 Once we have ORP, it is easy to achieve oblivious sort: just invoke any non-oblivious comparison-based sort after ORP.
 
-Since the functionality is deterministic, it is enough to consider separately correctness and simulation. 
+Since the functionality is deterministic, it is enough to consider separately correctness and simulation. Correctness follows from directly from the correctness of the ORP and the non-oblivious sort. As for obliviousness, given any input array, one can easily simulate the algorithm by first randomly permuting the array and then running the comparison-based non-oblivious sort. 
 The access patterns of a comparison-based sort depend only on the relative ranking of the input elements, which is independent of the input array once the array has been randomly permuted. 
 
 \subsection{Efficiency.}
