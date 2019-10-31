@@ -16,7 +16,7 @@ In these two problems, an array of $n$ elements is stored on an untrusted server
 The client wishes to sort or permute the $n$ elements in a \emph{data-oblivious} fashion.
 That is, the sequence of accesses it makes to the server should not reveal any information about the $n$ elements (e.g., their relative ranking).
 The client has a small amount of local storage, the access pattern to which cannot be observed by the server.
-This work presents simple and efficient algorithms to these problems, named bucket oblivious sort and bucket oblivious random permutation.
+This work presents simple and efficient algorithms to these two problems, named bucket oblivious sort and bucket oblivious random permutation.
 
 \subsection{State of the Affairs.}
 For oblivious sort, it is well-known that one can leverage 
@@ -26,7 +26,7 @@ Unfortunately, these algorithms are complicated and incur enormous constants ren
 %\rl{What's expensive is approximate halvers, not expanders.} 
 Thus, almost all known practical implementations~\cite{oblivistore,oblivm,graphsc}
 instead employ the simple bitonic sort algorithm~\cite{bitonic}. 
-While asymptotically worse, due to the small leading constants, it performs much better in practice.
+While asymptotically worse, due to the small leading constants, bitonic sort performs much better in practice.
 
 Oblivious random permutation (ORP) can be realized by assigning a sufficiently long random key to each element, and then obliviously sorting the elements by the keys.
 To the best of our knowledge, this remains the most practical solution for ORP.
@@ -40,7 +40,7 @@ Other approaches include the famous Thorp shuffle~\cite{thorp01} and random perm
 Let $Z$ be a statistical security parameter that controls the error probability. 
 Our bucket oblivious sort runs in $6n\log n$ time ($4n\log n$ for bucket ORP) and has an error probability around $e^{-Z/6}$ when the client can store $2Z$ elements locally.
 This is at most $3\times$ slower than the non-oblivious merge sort, and is at least $5\times$ faster than bitonic sort for $n=2^{30}$ (cf. Table~\ref{tab:compare}).
-Therefore, we recommend bucket oblivious sort and ORP as attractive alternatives to bitonic sort in practical implementations.
+Therefore, we recommend bucket oblivious sort and bucket ORP as attractive alternatives to bitonic sort in practical implementations.
 
 \begin{figure*}[h!]
 \centering
@@ -51,7 +51,6 @@ At level $i$, every $2^{i}$ consecutive buckets are semi-sorted by the most sign
 \label{fig:radix-sort}
 
 %\begin{table*}[t]
-\bigskip
 \bigskip
 \centering
 \begin{tabular}{|c|c|c|c|c|}
@@ -91,25 +90,22 @@ We refer readers to Figure~\ref{fig:radix-sort} for a graphical illustration.
 The above algorithm is clearly oblivious, as the order in which the client reads and writes the buckets is fixed and independent of the input array. If no bucket overflows, all elements reach their assigned destinations. By setting $Z$ appropriately, we can bound the overflow probability.
 
 Our bucket oblivious sort and bucket ORP algorithms are derived from
-this oblivious random bin assignment building block. 
+the above oblivious random bin assignment building block. 
 
-\paragraph{From oblivious bin assignment to ORP and oblivious sort.}
-To obtain a random permutation, 
-a simple approach is to remove the dummy elements and randomly permute 
-within each bucket of the final layer.
-Since the client can hold $Z$ elements, permuting each bucket
-obliviously can be done locally. 
-Once we have ORP, we can first perform ORP on the input array then apply any non-oblivious
-{\it comparison-based} sorting algorithm (e.g., quick sort or
+\paragraph{From oblivious random bin assignment to ORP and oblivious sort.}
+To obtain a random permutation, we simply remove all dummy elements and randomly permute 
+each bucket of the final layer.
+Since the client can hold $Z$ elements, permuting each bucket can be done locally. 
+We show that the algorithm is oblivious and gives a random permutation despite revealing the number of dummy elements in each destination bucket.
+To get oblivious sort, we can first perform ORP on the input array then apply any \emph{non-oblivious, comparison-based} sorting algorithm (e.g., quick sort or
 merge sort). We show that the composition of ORP and non-oblivious sort results in an oblivious sort. 
 
 \paragraph{Dealing with small client storage.}
-In Section~\ref{sec:O1client}, we extend the above algorithm
-to support $O(1)$ client storage. 
+In Section~\ref{sec:O1client}, we extend our algorithms to support $O(1)$ client storage. 
 We can rely on bitonic sort to realize the \textsc{MergeSplit} operation that operates on 4 buckets at a time,
 which would result in $O(n\log n\cdot \log^2 Z)$ runtime. 
 
-\paragraph{Locality.} Algorithmic performance when the data is stored on disk has been studied in the external disk model (e.g.,~\cite{RuemmlerW94,ArgeFGV97,Vitter01,Vitter06}) and references within). Recently, Asharov et al.~\cite{AsharovCNPRS19} extended this study to oblivious algorithms.  We observe that our algorithm is locality-friendly, and refer the reader to Section~\ref{sec:locality} for the exact definitions and the complexity measure.
+\paragraph{Locality.} Algorithmic performance when the data is stored on disk has been studied in the external disk model (e.g.,~\cite{RuemmlerW94,ArgeFGV97,Vitter01,Vitter06}) and references within). Recently, Asharov et al.~\cite{AsharovCNPRS19} extended this study to oblivious algorithms.  We discuss how our algorithms can be made locality-friendly in Section~\ref{sec:locality}. 
 
 
 %\paragraph{Organization.}

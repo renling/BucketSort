@@ -12,13 +12,13 @@
 \label{sec:defs}
 
 \paragraph{Notations and conventions.}
-We let $[n]$ denote the set $\{1,\ldots,n\}$. Throughout this paper, we will use
+Let $[n]$ denote the set $\{1,\ldots,n\}$. Throughout this paper, we will use
 $n$ to denote the size of the instance and use $\lambda$ to denote the security parameter. 
 %A function $\negl$ is called \emph{negligible} if for any constant $c > 0$ and all sufficiently large $\sec$'s, it holds that $\negl < \sec^{-c}$. 
 For an ensemble of distributions $\{D_\sec\}$ (parametrized with $\sec$),
-we denote by $x \leftarrow D_\sec$ a sampling of an instance according to the distribution $D_\sec$. 
-Given two ensembles of distributions $\{X_\sec\}$~and~$\{Y_\sec\}$,
-they are $\e(\sec)$-statistically-indistinguishable, denoted $\{X_\sec\} \overset{\e(\sec)}{\equiv} \{Y_\sec\}$, 
+we denote by $x \leftarrow D_\sec$ a sampling of an instance from the distribution $D_\sec$. 
+We say two ensembles of distributions $\{X_\sec\}$~and~$\{Y_\sec\}$ 
+are $\e(\sec)$-statistically-indistinguishable, denoted $\{X_\sec\} \overset{\e(\sec)}{\equiv} \{Y_\sec\}$, 
 if for any unbounded adversary $\A$, 
 \[
 \left|\Pr_{x\leftarrow X_\sec}\left[\A(1^\lambda, x)=1\right] - \Pr_{y\leftarrow Y_\sec}\left[\A(1^\lambda, y)=1\right] \right| \leq \e(\sec) \ .
@@ -132,10 +132,10 @@ store an address).
 %\paragraph{Obliviousness.} 
 Our security definition is standard. Intuitively, a RAM program $M$ obliviously simulates a RAM program $f$ if: (1) it has the same input/output behavior as $f$; (2) There exists a simulator $\Sim(\abs{x})$ that produces access pattern that is statistically close to the access pattern of $M(x)$. I.e., it can simulates all memory addresses accessed by $M$ during the execution on $x$, without knowing $x$. In case where the access pattern and the functionality are randomized, we have to consider the joint distribution of the simulator and the output of the RAM program or the functionality. 
 
+
 %In our sorting algorithm, the access pattern is randomized but the functionality is deterministic. In the oblivious random permutation algorithm, the access pattern is deterministic but the functionality is randomized. As always either the access pattern or the functionality is deterministic, we can consider a simpler definition of obliviousness in which the functionality and the simulation are considered separately. 
 
-A functionality $f$ is a (possibly randomized) RAM machine that gets some input $x$ and computes an outputs $y$. For a  RAM machine $M$ and input $x$, let ${\sf AccPtrn}(M(x))$ denote the distribution of memory addresses a machine $M$ produces on an input $x$.
-We have:
+For a  RAM machine $M$ and input $x$, let ${\sf AccPtrn}(M(x))$ denote the distribution of memory addresses a machine $M$ produces on an input $x$.
 \begin{definition}
 A RAM algorithm $M$ obliviously implements the functionality $f$ with $\e$-obliviousness if the following hold:
 \begin{eqnarray*}
@@ -143,6 +143,8 @@ A RAM algorithm $M$ obliviously implements the functionality $f$ with $\e$-obliv
 &&\hspace{+5ex}\overset{\epsilon(\lambda)}{\equiv} \left\{ {\sf AccPtrn}(M(x)),M(x)\right\}_{x \in \bit^\lambda}
 \end{eqnarray*}
 If $\epsilon(\cdot)=0$, we say $M$ is perfectly oblivious. 
+%\[ \left\{\Sim(1^\lambda),f(x)\right\}_{x \in \bit^\lambda} 
+%\overset{\epsilon(\lambda)}{\equiv} \left\{ {\sf AccPtrn}(M(x)),M(x)\right\}_{x \in \bit^\lambda} \]
 \end{definition}
 
 %$$
@@ -179,14 +181,10 @@ If $\epsilon(\cdot)=0$, we say $M$ is perfectly oblivious.
 
 The two main functionalities that we focus on in this paper are the following:
 
-%\begin{MyItemize}
-\smallskip
-\noindent
-{\bf Oblivious sort:} This is a deterministic functionality in which the input is an array $A[1,\ldots,n]$ of memory blocks (i.e., each $A[i] \in \bit^\blocksize$, representing a key). The goal is to output an array $A'[1,\ldots,n]$ which is some permutation $\pi:[n] \rightarrow [n]$ of the array $A$, i.e., $A'[i] = A[\pi(i)]$, such that $A'[1]\leq \ldots \leq A'[n]$. %Obliviousness is defined using Definition~\ref{defn:omachine}. We denote this functionality as ${\cal F}_{\rm sort}$. 
+\paragraph{Oblivious sort:}
+This is a deterministic functionality in which the input is an array $A[1,\ldots,n]$ of memory blocks (i.e., each $A[i] \in \bit^\blocksize$, representing a key). The goal is to output an array $A'[1,\ldots,n]$ which is some permutation $\pi:[n] \rightarrow [n]$ of the array $A$, i.e., $A'[i] = A[\pi(i)]$, such that $A'[1]\leq \ldots \leq A'[n]$. %Obliviousness is defined using Definition~\ref{defn:omachine}. We denote this functionality as ${\cal F}_{\rm sort}$. 
 
-\smallskip
-\noindent
- {\bf Oblivious permutation:} 
+\paragraph{Oblivious permutation:} 
 This is a randomized functionality in which the input is an array $A[1,\ldots,n]$ of memory blocks. The functionality chooses a random permutation $\pi:[n] \rightarrow [n]$ and outputs an array $A'[1,\ldots,n]$ such that $A'[i] = A[\pi(i)]$ for every $i$. %Obliviousness is defined using %Definition~\ref{defn:omachine}. Note that the definition requires that the access pattern does not leak the permutation chosen by the functionality. We denote this functionality ${\cal F}_{\rm perm}$. 
 %\end{MyItemize}
 
