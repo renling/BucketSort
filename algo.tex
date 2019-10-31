@@ -74,20 +74,20 @@ Bucket ORP oblivious implement the permutation functionality except for $\e(n,Z)
 \end{lemma}
 
 \begin{proof}
-We first describe the simulator $\Sim$. 
+We first describe the simulator. 
 The access pattern of the oblivious bin assignment algorithm is deterministic and the same for every input, where the overflow even is independent of the input itself. Therefore, it is easy to simulate the bin assignment. 
 The simulator then pretends to simulate the randomly permuting of each bin. 
 Then, 
-the simulator chooses random loads $\vec{K} = (K_0,K_1,\ldots,K_{B-1})$, where $K_i$ is the load of the real elements in the $i$th bin. This is done by simply throwing $n$ elements into $B$ bins (``in the head''). If there is some $i$ for which $K_i > Z$ then the simulator aborts. The removal of the dummy elements is equivalent to the revealing of these loads. Specifically, given 
+the simulator chooses random loads $\vec{k}=(k_0, k_1, \ldots, k_{B-1})$, where $k_i$ is the load of the real elements in the $i$th bin. This is done by simply throwing $n$ elements into $B$ bins (``in the head''). If there is some $i$ for which $k_i > Z$ then the simulator aborts. The removal of the dummy elements is equivalent to the revealing of these loads. 
 
-Clearly, $\vec{K}$ are distributed the same as in the real execution. The only difference between the simulated access pattern and the real one is in the case where the algorithm aborts as a result of an overflow before the last level, which occurs with at most $\e(n,Z)$ probability. 
+Clearly, $\vec{k}$ are distributed the same as in the real execution. The only difference between the simulated access pattern and the real one is in the case where the algorithm aborts as a result of an overflow before the last level, which occurs with at most $\e(n,Z)$ probability. 
 
-We next show that the output of the algorithm is a random permutation, conditioned of the access pattern. As we previously described, it is actually enough to condition on the vector of random loads $\vec{K} = (K_0,\ldots,K_{B-1})$. We show that given any such vector, all permutations are possible.  
+We next show that the output of the algorithm is a random permutation, conditioned of the access pattern. As we previously described, it is actually enough to condition on the vector of random loads $\vec{k}=(k_0, k_1, \ldots, k_{B-1})$. We show that given any such vector, all permutations are possible.  
 
-For a particular load $\vec{k}=(k_0, k_1, \ldots, k_{B-1})$, there are ${n \choose k_0,\ldots,k_{B-1}}$ ways to distribute the elements into the bins while achieving the vector of loads $\vec{k}$. Then, each bin is individually permuted. 
-The total number of possible outputs with that load is then
+Fix a particular load $\vec{k}=(k_0, k_1, \ldots, k_{B-1})$. The algorithm works by first assigning the real elements into the bins, and then permuting within each bin. For every input, there are exactly ${n \choose k_0,\ldots,k_{B-1}}$ ways to distribute the real elements into the bins while achieving the vector of loads $\vec{k}$. Then, each bin is individually permuted, i.e., within each bin $i$, we have $k_i$ different possible ordering. Overall, 
+the total number of possible outputs with that load is then
 \[{n \choose k_0,\ldots,k_{B-1}} \cdot k_0! \cdot \ldots \cdot k_{B-1}! = n!\]
-That is, even if the loads $\vec{k}=(k_0, k_1, \ldots, k_{B-1})$ are revealed, all permutations are still possible.
+That is, even conditioned on some specific loads $\vec{k}=(k_0, k_1, \ldots, k_{B-1})$, all permutations are still possible.
 Therefore, for every $\pi$, $\Pr\left[\Pi = \pi \mid \vec{K}=\vec{k} \right] = \frac 1 {n!}$, and
 \[ \Pr\left[\Pi = \pi\right] = \sum_{\vec{k}} \Pr\left[\Pi = \pi \mid \vec{K}=\vec{k} \right] \cdot \Pr\left[\vec{K}=\vec{k}\right] = \frac {1}{n!} \]
 %&= \frac {1}{n!} \cdot \sum_{\vec{k}} \Pr\left[\vec{K}=\vec{k}\right] = \frac {1}{n!}
@@ -98,6 +98,8 @@ The ORP fails only when some bin overflows during the oblivious random bin assig
 \subsection{Bucket Oblivious Sort.}
 \label{sec:osort}
 Once we have ORP, it is easy to achieve oblivious sort: just invoke any non-oblivious comparison-based sort after ORP.
+
+Since the functionality is deterministic, it is enough to consider separately correctness and simulation. Correctness follows from directly from the correctness of the ORP and the non-oblivious sort. As for obliviousness, given any input array, one can easily simulate the algorithm by first randomly permuting the array and then running the comparison-based non-oblivious sort. 
 The access patterns of a comparison-based sort depend only on the relative ranking of the input elements, which is independent of the input array once the array has been randomly permuted. 
 
 \subsection{Efficiency.}
