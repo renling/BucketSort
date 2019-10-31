@@ -92,7 +92,7 @@ Therefore, for every $\pi$, $\Pr\left[\Pi = \pi \mid \vec{K}=\vec{k} \right] = \
 \[ \Pr\left[\Pi = \pi\right] = \sum_{\vec{k}} \Pr\left[\Pi = \pi \mid \vec{K}=\vec{k} \right] \cdot \Pr\left[\vec{K}=\vec{k}\right] = \frac {1}{n!} \]
 %&= \frac {1}{n!} \cdot \sum_{\vec{k}} \Pr\left[\vec{K}=\vec{k}\right] = \frac {1}{n!}
 
-The ORP fails only when some bin overflows during the oblivious random bin assignment, which happens with $\epsilon(n,Z)$ probability.
+The ORP fails only when some bin overflows during the oblivious random bin assignment, which happens with $\epsilon(n,Z)$ probability by Lemma~\ref{lemma:shuffle}.
 \end{proof}
 
 \subsection{Bucket Oblivious Sort.}

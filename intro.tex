@@ -93,14 +93,12 @@ The above algorithm is clearly oblivious, as the order in which the client reads
 Our bucket oblivious sort and bucket ORP algorithms are derived from
 this oblivious random bin assignment building block. 
 
-\paragraph{From oblivious bin assignment to ORP.}
+\paragraph{From oblivious bin assignment to ORP and oblivious sort.}
 To obtain a random permutation, 
 a simple approach is to remove the dummy elements and randomly permute 
 within each bucket of the final layer.
 Since the client can hold $Z$ elements, permuting each bucket
 obliviously can be done locally. 
-
-\paragraph{From ORP to oblivious sort.}
 Once we have ORP, we can first perform ORP on the input array then apply any non-oblivious
 {\it comparison-based} sorting algorithm (e.g., quick sort or
 merge sort). We show that the composition of ORP and non-oblivious sort results in an oblivious sort. 
