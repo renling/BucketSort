@@ -130,7 +130,7 @@ store an address).
 \noindent
 {\bf Obliviousness.}
 %\paragraph{Obliviousness.} 
-Our security definition is standard. Intuitively, a RAM program $M$ obliviously simulates a RAM program $f$ other In case where the access pattern and the functionality are randomized, we have to consider the joint distribution of the simulator and the output of the RAM program or the functionality. 
+Our security definition is standard. Intuitively, a RAM program $M$ obliviously simulates a RAM program $f$ if: (1) it has the same input/output behavior as $f$; (2) There exists a simulator $\Sim(\abs{x})$ that produces access pattern that is statistically close to the access pattern of $M(x)$. I.e., it can simulates all memory addresses accessed by $M$ during the execution on $x$, without knowing $x$. In case where the access pattern and the functionality are randomized, we have to consider the joint distribution of the simulator and the output of the RAM program or the functionality. 
 
 %In our sorting algorithm, the access pattern is randomized but the functionality is deterministic. In the oblivious random permutation algorithm, the access pattern is deterministic but the functionality is randomized. As always either the access pattern or the functionality is deterministic, we can consider a simpler definition of obliviousness in which the functionality and the simulation are considered separately. 
 
