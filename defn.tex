@@ -137,8 +137,7 @@ For a  RAM machine $M$ and input $x$, let ${\sf AccPtrn}(M(x))$ denote the distr
 \begin{definition}
 A RAM algorithm $M$ obliviously implements the functionality $f$ with $\e$-obliviousness if the following hold:
 \begin{eqnarray*}
-\hspace{-5ex}\lefteqn{\left\{\Sim(1^\lambda),f(x)\right\}_{x \in \bit^\lambda}} \\
-&&\hspace{+5ex}\overset{\epsilon(\lambda)}{\equiv} \left\{ {\sf AccPtrn}(M(x)),M(x)\right\}_{x \in \bit^\lambda}
+\left\{\Sim(1^\lambda),f(x)\right\}_{x \in \bit^\lambda} \overset{\epsilon(\lambda)}{\equiv} \left\{ {\sf AccPtrn}(M(x)),M(x)\right\}_{x \in \bit^\lambda}
 \end{eqnarray*}
 If $\epsilon(\cdot)=0$, we say $M$ is perfectly oblivious. 
 %\[ \left\{\Sim(1^\lambda),f(x)\right\}_{x \in \bit^\lambda} 

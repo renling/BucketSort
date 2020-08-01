@@ -1,0 +1,205 @@
+
+\documentclass[11pt,letterpaper]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage[utf8]{inputenc}
+
+\usepackage{cite}
+\usepackage[bookmarks=true,pdfstartview=FitH,colorlinks,linkcolor=darkred,filecolor=darkred,citecolor=darkred,urlcolor=darkred]{hyperref}
+
+
+\usepackage{multicol}
+\usepackage{color,xcolor}
+\usepackage{graphicx,color,eso-pic}
+\usepackage{amsmath,amssymb,stmaryrd}
+\usepackage{boxedminipage}
+\usepackage{cite}
+\usepackage{url}
+\usepackage{graphicx}
+\usepackage[bf]{caption}
+\usepackage{subcaption}
+\usepackage{color}
+\usepackage{xspace}
+\usepackage{multirow}
+\usepackage{amsmath,amsthm,amstext,amssymb,amsfonts,latexsym}
+\usepackage{wrapfig}
+\usepackage{comment}
+\usepackage{algorithmicx}
+ \usepackage{algpseudocode}
+
+
+
+\definecolor{darkred}{rgb}{0.5, 0, 0}
+\definecolor{darkgreen}{rgb}{0, 0.5, 0}
+\definecolor{darkblue}{rgb}{0,0,0.5}
+
+\newcommand{\gnote}[1]{{\footnotesize\color{red}[Gilad: #1]}}
+
+
+\newenvironment{proofof}[1]{\noindent \textbf{Proof of #1:}}{\hfill \qed}
+
+
+
+\newtheorem{thm}{Theorem}[section]      % A counter for Theorems etc
+\newtheorem{theorem}[thm]{Theorem}
+\newtheorem{conjecture}[thm]{Conjecture}
+\newtheorem{lemma}[thm]{Lemma}
+\newtheorem{claim}[thm]{Claim}
+\newtheorem{corollary}[thm]{Corollary}
+\newtheorem{fact}[thm]{Fact}
+\newtheorem{proposition}[thm]{Proposition}
+\newtheorem{example}[thm]{Example}
+
+
+%{
+%\theoremstyle{definition}
+\newtheorem{definition}[thm]{Definition}
+\newtheorem{remark}[thm]{Remark}
+%}
+
+
+\newtheoremstyle{boxes}% name  
+{2pt}% ?Space above ? 
+{0pt}% ?Space below ?
+{}% ?Body font ?
+{}% ?Indent amount ?
+{\bfseries}% ?Theorem head font?
+{}% ?Punctuation after theorem head ?
+{\newline}% ?Space after theorem head ?
+{\thmname{#1}\thmnumber{ #2}:  
+\thmnote{#3}}
+
+\theoremstyle{boxes}
+\newtheorem{algorithm}[thm]{Algorithm}%{\bf}{} %
+\newtheorem{myalgo}[thm]{Algorithm}%{\bf}{} %
+\newtheorem{myfunc}[thm]{Functionality}%{\bf}{} %
+\newtheorem{myconst}[thm]{Construction}%{\bf}{} %
+
+\newcommand{\algo}[3]{
+\medskip
+\noindent\begin{minipage}{\textwidth}
+\rule{\linewidth}{0.3mm}
+\begin{myalgo}
+[\sloppy {#1}\vspace{-1.5ex}]\label{#2}\vspace{-1ex}
+\rule{\linewidth}{0.1mm}
+\end{myalgo}
+\end{minipage}
+%\vspace{-1.5ex}
+%\leavevmode\vspace{-1.2\baselineskip}
+{#3}
+%\vspace{-2.7ex}
+\noindent
+\rule{\linewidth}{0.3mm}
+}
+
+\newcommand{\func}[3]{
+\medskip
+\noindent\begin{minipage}{\textwidth}
+\rule{\linewidth}{0.3mm}
+\begin{myfunc}
+[\sloppy {#1}\vspace{-1.5ex}]\label{#2}\vspace{-1ex}
+\rule{\linewidth}{0.1mm}
+\end{myfunc}
+\end{minipage}
+%\vspace{-1.5ex}
+%\leavevmode\vspace{-1.2\baselineskip}
+{#3}
+\vspace{-2.7ex}
+\noindent
+\rule{\linewidth}{0.3mm}
+}
+
+\newcommand{\const}[3]{
+\medskip
+\noindent\noindent\begin{minipage}{\textwidth}
+\rule{\linewidth}{0.3mm}
+\begin{myconst}
+[\sloppy {#1}\vspace{-1.5ex}]\label{#2}\vspace{-1ex}
+\rule{\linewidth}{0.1mm}
+\end{myconst}
+\end{minipage}
+%\vspace{-1.5ex}
+%\leavevmode\vspace{-1.2\baselineskip}
+{#3}
+
+\vspace{-2.7ex}
+\noindent
+\rule{\linewidth}{0.3mm}
+}
+
+\newcommand{\eqdef}{\stackrel{\rm def}{=}}
+\newcommand{\indist}{\stackrel{\rm c}{\equiv}}
+\newcommand{\statclose}{\stackrel{\rm s}{\equiv}}
+
+
+\newenvironment{MyEnumerate}[1]{\begin{enumerate}\setlength{\itemsep}{0.1cm}
+\setlength{\parskip}{-0.05cm} #1}{\end{enumerate}}
+\newenvironment{MyItemize}[1]{\begin{itemize}\setlength{\itemsep}{0.1cm}
+\setlength{\parskip}{-0.05cm} #1}{\end{itemize}}
+
+\renewcommand{\sec}{{\lambda}}
+\newcommand{\A}{{\cal A}}
+\renewcommand{\S}{{\cal S}}
+\newcommand{\bit}{{\{0,1\}}}
+
+
+
+\newcommand{\X}{\mathbf{X}}
+\renewcommand{\sec}{{\lambda}}
+\newcommand{\e}{{\epsilon}}
+
+\newcommand{\bsize}{\ensuremath{b}}
+\newcommand{\op}{\ensuremath{\mathsf{op}}\xspace}
+\newcommand{\data}{{\ensuremath{\mathsf{data}}}\xspace}
+\newcommand{\addr}{{\ensuremath{\mathsf{addr}}}\xspace}
+
+\newcommand{\Sim}{\ensuremath{{\sf Sim}}\xspace}
+\newcommand{\abs}[1]{\left|{#1}\right|}
+
+
+
+\input{macro}
+
+
+%\sloppy
+%\widowpenalty10000
+%\clubpenalty10000
+
+\begin{document}
+
+\title{\bf Bucket Oblivious Sort: \\An Extremely Simple Oblivious Sort\thanks{The paper was presented in the 3rd Symposium on Simplicity in Algorithms, SOSA@SODA 2020.}}
+
+\author{Gilad Asharov \thanks{Bar-Ilan University. Part of the work was done while the author was a post-doctoral fellow at Cornell Tech supported a Junior Fellow award from the Simons Foundation, and while at J.P. Morgan AI Research.} \qquad
+T-H. Hubert Chan\thanks{The University of Hong Kong. Partially supported the Hong Kong RGC under the grant 17200418.} \qquad
+Kartik Nayak\thanks{Duke University. Part of the work was done while the author was at University of Maryland.} \\
+Rafael Pass\thanks{Cornell Tech.} \qquad
+Ling Ren\thanks{University of Illinois Urbana-Champaign. Part of the work was done while the author was at MIT.} \qquad
+Elaine Shi\thanks{Cornell University.}}
+
+\newcommand{\rl}[1]{{\footnotesize\color{orange}[Ling: #1]}}
+
+\date{}
+
+\maketitle
+
+%\fancyfoot[R]{\scriptsize{Copyright \textcopyright\ 2020 by SIAM\\
+%Unauthorized reproduction of this article is prohibited}}
+
+\begin{abstract}
+\input{abstract}
+\end{abstract}
+
+\input{intro}
+\input{defn}
+\input{algo}
+\input{extension}
+
+\bibliographystyle{alpha}
+\bibliography{refs}
+
+
+\appendix
+
+%\input{locality}
+
+\end{document}
