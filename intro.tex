@@ -1,5 +1,3 @@
-%!TEX root = main.tex
-
 
 %\gnote{Write the paper in the client-server model, where the client can hold $4$ buckets at a time; Write the introduction as such; Move all other optimizations to "extensions"}
 
@@ -18,7 +16,7 @@ That is, the sequence of accesses it makes to the server should not reveal any i
 The client has a small amount of local storage, the access pattern to which cannot be observed by the server.
 This work presents simple and efficient algorithms to these two problems, named bucket oblivious sort and bucket oblivious random permutation.
 
-\subsection{State of the Affairs.}
+\subsection{State of the Affairs}
 For oblivious sort, it is well-known that one can leverage 
 sorting networks such as AKS~\cite{aks} and Zig-zag sort~\cite{zigzag}
 to obliviously sort $n$ elements in $O(n\log n)$ time. 
@@ -36,7 +34,7 @@ shuffle~\cite{ohrimenko2014melbourne} that do not rely on
 oblivious sort; but they require $O(\sqrt{n})$ client storage to permute $n$ elements.
 Other approaches include the famous Thorp shuffle~\cite{thorp01} and random permutation networks~\cite{randpermnet}, but none of these solutions are competitive in performance either asymptotically or concretely.
 
-\subsection{Our Results.}
+\subsection{Our Results}
 Let $Z$ be a statistical security parameter that controls the error probability. 
 Our bucket oblivious sort runs in $6n\log n$ time ($4n\log n$ for bucket ORP) and has an error probability around $e^{-Z/6}$ when the client can store $2Z$ elements locally.
 This is at most $3\times$ slower than the non-oblivious merge sort, and is at least $5\times$ faster than bitonic sort for $n=2^{30}$ (cf. Table~\ref{tab:compare}).

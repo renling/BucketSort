@@ -1,9 +1,8 @@
-% !TEX root =  main.tex
 
 \section{Extensions}
 \label{sec:extensions}
 
-\subsection{Extension to Constant Client Storage.}
+\subsection{Extension to Constant Client Storage}
 \label{sec:O1client}
 We now discuss how to extend our algorithms to the case where the client can only store $O(1)$ elements locally.
 
@@ -23,7 +22,7 @@ Since we invoke $B/2$ instances of bitonic sort on $2Z$ elements at each level,
 the runtime is roughly $\log B \cdot B/2 \cdot 2Z \log^2 (2Z)) \approx 2 n\log n \log^2 Z$. 
 %In this case, our ORP and oblivious sort run in approximately $160n\log n$ time. \rl{Not competitive. is this part worth it?}
 
-\subsection{Better Asymptotic Performance.}
+\subsection{Better Asymptotic Performance}
 Our algorithms can also be extended to have better asymptotic performance.
 For this instantiation, we use a primitive called oblivious tight compaction.
 Oblivious tight compaction receives $n$ elements each marked as either 0 or 1, and outputs a permutation of the $n$ elements such that all elements marked 0 appear before the elements that are marked 1. 
@@ -31,7 +30,7 @@ It should not be hard to see that oblivious tight compaction can be used to achi
 Using the $O(1)$-client-storage and $O(n)$-time oblivious tight compaction construction from~\cite{asharov2018optorama}, bucket oblivious sort achieves $O(n\log n + n\log^2Z)$ runtime and $O(1)$ client storage.
 Setting $Z=\omega(1)\log n$, bucket oblivious sort achieves $O(n\log n)$ runtime, $O(1)$ client storage, and a negligible in $n$ error probability.
 
-\subsection{Locality.}
+\subsection{Locality}
 \label{sec:locality}
 Algorithmic performance when the data is stored on disk has been studied in the external disk model (e.g.,~\cite{RuemmlerW94,ArgeFGV97,Vitter01,Vitter06}) and references within). Recently, Asharov et al.~\cite{AsharovCNPRS19} extended this study to oblivious algorithms. In this setting, an algorithm 
 is said to have $(p, \ell)$ locality if it has access 
