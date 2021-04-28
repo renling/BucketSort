@@ -12,7 +12,7 @@
 
 \For {$i=0,\ldots,\log B-1$}
     \For {$j=0,\ldots,B/2-1$}
-        \State $(A^{(i+1)}_{2j}, A^{(i+1)}_{2j+1}) \leftarrow \textsc{MergeSplit}(A^{(i)}_{j'+j}, A^{(i)}_{j'+j+2^i}, i)$ where $j'=\lfloor j / {2^i} \rfloor \cdot 2^{i+1}$
+        \State $(A^{(i+1)}_{2j}, A^{(i+1)}_{2j+1}) \leftarrow \textsc{MergeSplit}(A^{(i)}_{j'+j}, A^{(i)}_{j'+j+2^i}, i)$ where $j'=\lfloor j / {2^i} \rfloor \cdot 2^{i}$ % had a bug as 2^{i+1}
         \State \Comment{Input: $j$-th pair of buckets with distance $2^i$ in $A^{(i)}$; Output: $j$-th pair of buckets in $A^{(i+1)}$}
         %\State Let $(A_0, A_1$) be the $j$-th pair of buckets with distance $2^i$ in $A^{(i)}$ 
         %\State Let $(A'_0, A'_1)$ be the $j$-th pair of buckets in $A^{(i+1)}$
